@@ -30,7 +30,7 @@ const { white, lightGrey, primary, darkGrey } = colors;
 
 const MainScreen = ({ navigation }) => {
   const placesRef = useRef();
-  // const [location, setLocation] = useState();
+
   const [startLocation, setStartLocation] = useState();
   const [dest, setDest] = useState();
   const [modalVisible, setModalVisible] = useState(false);
