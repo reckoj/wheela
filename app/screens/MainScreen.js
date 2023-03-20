@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Pressable,
   TouchableOpacity,
+  Modal,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import RegularText from "../components/texts/RegularText";
@@ -22,19 +23,21 @@ import {
   setOrigin,
 } from "../../slices/navSlice";
 import TripResult from "./TripResult";
-import { useRoute } from "@react-navigation/native";
-import { selectMake, selectModel } from "../../slices/carSlice";
+import { Card, Paragraph, Title, Button as Btn } from "react-native-paper";
+import Pana from "../../assets/images/pana.svg";
 
-const { white, lightGrey, primary } = colors;
+const { white, lightGrey, primary, darkGrey } = colors;
 
 const MainScreen = ({ navigation }) => {
   const placesRef = useRef();
   // const [location, setLocation] = useState();
   const [startLocation, setStartLocation] = useState();
   const [dest, setDest] = useState();
-  /**
-   * TODO more work needs to be done here
-   */
+  const [modalVisible, setModalVisible] = useState(false);
+  const containerStyle = { backgroundColor: "white", padding: 20 };
+  const travelTime = useSelector(selectTravelTimeInformation);
+
+  const travelDuration = travelTime?.duration.text;
   const dispatch = useDispatch();
   return (
     <>
@@ -196,7 +199,11 @@ const MainScreen = ({ navigation }) => {
       >
         {<SelectCarBtn onPress={() => navigation.navigate("VehicleMake")} />}
         {
-          <MainButton onPress={() => {}}>
+          <MainButton
+            onPress={() => {
+              setModalVisible(true);
+            }}
+          >
             <RegularText
               style={{
                 color: white,
@@ -209,6 +216,79 @@ const MainScreen = ({ navigation }) => {
           </MainButton>
         }
       </View>
+
+      <Modal
+        contentContainerStyle={containerStyle}
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <Card
+          // mode="outlined"
+          style={{
+            position: "absolute",
+            display: "flex",
+            alignContent: "center",
+            margin: 37,
+            height: 380,
+            top: 200,
+            backgroundColor: white,
+          }}
+        >
+          <Pana width={180} height={180} style={{ alignSelf: "center" }} />
+          <Card.Content
+            style={{
+              justifyContent: "center",
+              alignContent: "center",
+              alignItems: "center",
+              alignSelf: "center",
+            }}
+          >
+            <Title>You’ve arrived at your destination!</Title>
+          </Card.Content>
+          <Card.Content style={{}}>
+            <Paragraph>
+              Time spent{" "}
+              <Text style={styles.regularText2}>{travelDuration}</Text>
+            </Paragraph>
+          </Card.Content>
+          <Card.Actions
+            style={{
+              // justifyContent: "center",
+              // alignContent: "center",
+              // position: "absolute",
+              alignSelf: "center",
+              top: 40,
+            }}
+          >
+            <Btn
+              onPress={() => {
+                setModalVisible(!modalVisible);
+                navigation.navigate("MainScreen");
+              }}
+              style={{
+                padding: 15,
+
+                backgroundColor: primary,
+                borderRadius: 15,
+              }}
+            >
+              <RegularText
+                style={{
+                  color: white,
+                  fontSize: 16,
+                  fontFamily: "Amaranth-reg",
+                }}
+              >
+                Home
+              </RegularText>
+            </Btn>
+          </Card.Actions>
+        </Card>
+      </Modal>
     </>
   );
 };
@@ -224,6 +304,11 @@ const styles = StyleSheet.create({
     shadowOffset: { width: -2, height: 4 },
     shadowOpacity: 0.4,
     shadowRadius: 3,
+  },
+  regularText2: {
+    color: primary,
+    fontFamily: "Amaranth-reg",
+    marginRight: 10,
   },
 });
 
@@ -246,6 +331,47 @@ const placesStyles = StyleSheet.create({
     paddingLeft: 35,
     // paddingVertical: 20,
     // display: "flex",
+  },
+});
+
+const modalStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    padding: 20,
+    width: 290,
+  },
+  headerText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    fontFamily: "Amaranth-bi",
+  },
+  headerTextMain: {
+    marginTop: 10,
+    marginBottom: -10,
+    fontSize: 18,
+    fontWeight: "bold",
+    fontFamily: "Amaranth-bi",
+  },
+  regularText: {
+    fontFamily: "Amaranth-reg",
+    fontSize: 12,
+    color: darkGrey,
+  },
+  regularTextContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 10,
+  },
+  regularText2Container: {
+    display: "flex",
+    justifyContent: "flex-end",
+  },
+  regularText2: {
+    color: primary,
+    fontFamily: "Amaranth-reg",
+    marginRight: 10,
   },
 });
 
