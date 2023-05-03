@@ -1,7 +1,8 @@
-import { createSlice } from "@reduxjs/toolkit";
-const defaultMake = { cars: "Select Make" };
-const defaultModel = { make: "Select Model" };
-const defaultYear = { make: "Select Year" };
+import { createSlice } from '@reduxjs/toolkit';
+
+const defaultMake = 'Select Make';
+const defaultModel = { make: 'Select Model' };
+const defaultYear = { make: 'Select Year' };
 
 const initialState = {
   make: defaultMake,
@@ -9,7 +10,7 @@ const initialState = {
   year: defaultYear,
 };
 export const carSlice = createSlice({
-  name: "cars",
+  name: 'cars',
   initialState,
   reducers: {
     setMake: (state, action) => {
@@ -26,8 +27,8 @@ export const carSlice = createSlice({
 
 export const { setMake, setModel, setYear } = carSlice.actions;
 
-export const selectMake = (state) => state.cars.make;
-export const selectModel = (state) => state.cars.model;
-export const selectYear = (state) => state.cars.year;
+export const selectMake = (state) => state.make;
+export const selectModel = (state) => state.model;
+export const selectYear = (state) => state.year;
 
 export default carSlice.reducer;

@@ -10,28 +10,45 @@ import {
   Image,
   TouchableWithoutFeedback,
   TouchableOpacity,
-} from "react-native";
-import React from "react";
-import { MotiView } from "moti";
-import { colors } from "../components/Colors";
-import RegularText from "../components/texts/RegularText";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import BackButton from "../components/BackButton";
-import data from "../hooks/apiRequests/CallCarsApi";
-import { useState } from "react";
-import { useRoute } from "@react-navigation/native";
-import { useDispatch, useSelector } from "react-redux";
-import { selectMake, setMake } from "../../slices/carSlice";
+} from 'react-native';
+import React from 'react';
+import { MotiView } from 'moti';
+import { colors } from '../components/Colors';
+import RegularText from '../components/texts/RegularText';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import BackButton from '../components/BackButton';
+import data from '../hooks/apiRequests/CallCarsApi';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectMake, setMake } from '../../slices/carSlice';
+import axios from 'axios';
+
 const { white, secondary, lightGrey } = colors;
 
-const VehicleMake = ({ navigation, props }) => {
-  const listFooter = () => {
-    <View style={{ height: 100 }}>
-      <Button title="lik" />
-    </View>;
+const VehicleMake = ({ navigation }) => {
+  const options = {
+    method: 'GET',
+    url: 'https://car-data.p.rapidapi.com/cars',
+    params: { limit: '10', page: '0' },
+    headers: {
+      'X-RapidAPI-Key': '9f067022f9msh8d829aae7abdf42p128dc7jsn5dfa84fcbef8',
+      'X-RapidAPI-Host': 'car-data.p.rapidapi.com',
+    },
   };
 
-  // const make = useSelector(selectMake)
+  useEffect(() => {
+    axios
+      .request(options)
+      .then((response) => {
+        let res = response.data;
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
+  }, [make]);
+
+  const make = useSelector(selectMake);
+  const dispatch = useDispatch();
 
   const renderItem = ({ item, index }) => {
     return (
@@ -44,12 +61,12 @@ const VehicleMake = ({ navigation, props }) => {
         <TouchableOpacity
           style={styles.imageContainer}
           onPress={() => {
-            navigation.navigate("VehicleModel");
-
-            console.log(item.make);
+            navigation.navigate('VehicleModel', { make: item.make });
+            dispatch(setMake(item.make));
           }}
         >
           <Image source={item.image} style={styles.image} />
+          <Text>{item.make}</Text>
         </TouchableOpacity>
       </MotiView>
     );
@@ -60,7 +77,7 @@ const VehicleMake = ({ navigation, props }) => {
         style={[
           styles.container,
           {
-            position: "relative",
+            position: 'relative',
             backgroundColor: white,
             marginHorizontal: 20,
           },
@@ -68,20 +85,20 @@ const VehicleMake = ({ navigation, props }) => {
       >
         <View
           style={{
-            display: "flex",
-            justifyContent: "center",
+            display: 'flex',
+            justifyContent: 'center',
             marginVertical: 20,
           }}
         >
-          <BackButton onPress={() => navigation.navigate("MainScreen")} />
+          <BackButton onPress={() => navigation.navigate('MainScreen')} />
           <RegularText
             style={{
-              position: "absolute",
-              alignSelf: "center",
+              position: 'absolute',
+              alignSelf: 'center',
               letterSpacing: 1,
-              display: "flex",
+              display: 'flex',
               fontSize: 20,
-              fontWeight: "bold",
+              fontWeight: 'bold',
             }}
           >
             Select Make
@@ -95,7 +112,6 @@ const VehicleMake = ({ navigation, props }) => {
           numColumns={2}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ marginBottom: 150 }}
-          ListFooterComponent={listFooter}
         />
       </View>
     </SafeAreaView>
@@ -107,13 +123,13 @@ const styles = StyleSheet.create({
     backgroundColor: white,
   },
   listContainer: {
-    width: Dimensions.get("window").width / 2 - 40,
-    backgroundColor: "white",
-    display: "flex",
+    width: Dimensions.get('window').width / 2 - 40,
+    backgroundColor: 'white',
+    display: 'flex',
 
     margin: 10,
     borderRadius: 20,
-    shadowColor: "#171717",
+    shadowColor: '#171717',
     shadowOffset: { width: -1, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
@@ -121,20 +137,20 @@ const styles = StyleSheet.create({
   imageContainer: {
     margin: 15,
     borderRadius: 10,
-    overflow: "hidden",
-    display: "flex",
-    alignItems: "center",
+    overflow: 'hidden',
+    display: 'flex',
+    alignItems: 'center',
   },
   image: {
-    width: "90%",
+    width: '90%',
     height: undefined,
     aspectRatio: 1,
-    resizeMode: "contain",
+    resizeMode: 'contain',
   },
 
   nameText: {
-    color: "black",
-    fontWeight: "bold",
+    color: 'black',
+    fontWeight: 'bold',
     marginLeft: 15,
   },
 });

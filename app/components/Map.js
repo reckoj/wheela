@@ -59,7 +59,7 @@ const Map = () => {
     const getTraveltime = async () => {
       fetch(
         `https://maps.googleapis.com/maps/api/distancematrix/json?
-				units=imperial&origins=${origin.description}&destinations=${destination.description}&key=${GOOGLE_MAPS_APIKEY}`
+				units=imperial&origins=${origin.description}&destinations=${destination.description}&key=${process.env.GOOGLE_MAPS_APIKEY}`
       )
         .then((res) => res.json())
         .then((data) => {
@@ -72,7 +72,7 @@ const Map = () => {
     };
 
     getTraveltime();
-  }, [origin, destination, GOOGLE_MAPS_APIKEY]);
+  }, [origin, destination, process.env.GOOGLE_MAPS_APIKEY]);
   return (
     <View style={styles.container}>
       <MapView
@@ -99,7 +99,7 @@ const Map = () => {
           <MapViewDirections
             origin={origin.description}
             destination={destination.description}
-            apikey={GOOGLE_MAPS_APIKEY}
+            apikey={process.env.GOOGLE_MAPS_APIKEY}
             strokeWidth={5}
             strokeColor={primary}
           />

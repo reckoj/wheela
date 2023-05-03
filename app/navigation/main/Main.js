@@ -1,10 +1,12 @@
-import { createStackNavigator } from "@react-navigation/stack";
-import VehicleMake from "../../screens/VehicleMake";
-import VehicleModel from "../../screens/VehicleModel";
-import VehicleYear from "../../screens/VehicleYear";
-import Home from "../../screens/MainScreen";
-import MainScreen from "../../screens/MainScreen";
-import Map from "../../components/Map";
+import { createStackNavigator } from '@react-navigation/stack';
+import VehicleMake from '../../screens/VehicleMake';
+import VehicleModel from '../../screens/VehicleModel';
+import VehicleYear from '../../screens/VehicleYear';
+import Home from '../../screens/MainScreen';
+import MainScreen from '../../screens/MainScreen';
+import Map from '../../components/Map';
+import Vehicledata from '../../hooks/apiRequests/Vehicledata';
+import TripResult from '../../screens/TripResult';
 
 const Stack = createStackNavigator();
 
@@ -27,6 +29,21 @@ function Main() {
       <Stack.Screen
         name="VehicleMake"
         component={VehicleMake}
+        options={{
+          headerShown: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="Vehicledata"
+        component={Vehicledata}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="TripResult"
+        component={TripResult}
         options={{
           headerShown: false,
         }}

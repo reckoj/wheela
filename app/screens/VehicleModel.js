@@ -10,21 +10,26 @@ import {
   Image,
   TouchableWithoutFeedback,
   TouchableOpacity,
-} from "react-native";
-import React from "react";
-import { MotiView } from "moti";
-import { colors } from "../components/Colors";
-import RegularText from "../components/texts/RegularText";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import BackButton from "../components/BackButton";
-import data from "../hooks/apiRequests/CallCarsApi";
-import { useState } from "react";
-import { useRoute } from "@react-navigation/native";
-import { setModel } from "../../slices/carSlice";
-import { useDispatch } from "react-redux";
+} from 'react-native';
+import React from 'react';
+import { MotiView } from 'moti';
+import { colors } from '../components/Colors';
+import RegularText from '../components/texts/RegularText';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import BackButton from '../components/BackButton';
+import data from '../hooks/apiRequests/CallCarsApi';
+import { useState } from 'react';
+import { useRoute } from '@react-navigation/native';
+import { setModel } from '../../slices/carSlice';
+import { useDispatch } from 'react-redux';
+
 const { white, secondary, lightGrey } = colors;
 
 const VehicleModel = ({ navigation, props }) => {
+  const [selectedModel, setSelectedModel] = useState();
+  const route = useRoute(); // retrieve the route object
+  const make = route.params?.make;
+  console.log(make, 'from the models page');
   const renderItem = ({ item, index }) => {
     return (
       <MotiView
@@ -36,7 +41,10 @@ const VehicleModel = ({ navigation, props }) => {
         <TouchableOpacity
           style={styles.textContainer}
           onPress={() => {
-            navigation.navigate("VehicleYear");
+            navigation.navigate('VehicleYear', {
+              model: item.model,
+              make: make,
+            });
 
             console.log(item.model);
           }}
@@ -52,7 +60,7 @@ const VehicleModel = ({ navigation, props }) => {
         style={[
           styles.container,
           {
-            position: "relative",
+            position: 'relative',
             backgroundColor: white,
             marginHorizontal: 20,
           },
@@ -60,20 +68,20 @@ const VehicleModel = ({ navigation, props }) => {
       >
         <View
           style={{
-            display: "flex",
-            justifyContent: "center",
+            display: 'flex',
+            justifyContent: 'center',
             marginVertical: 20,
           }}
         >
-          <BackButton onPress={() => navigation.navigate("VehicleMake")} />
+          <BackButton onPress={() => navigation.navigate('VehicleMake')} />
           <RegularText
             style={{
-              position: "absolute",
-              alignSelf: "center",
+              position: 'absolute',
+              alignSelf: 'center',
               letterSpacing: 1,
-              display: "flex",
+              display: 'flex',
               fontSize: 20,
-              fontWeight: "bold",
+              fontWeight: 'bold',
             }}
           >
             Select Model
@@ -96,12 +104,12 @@ const styles = StyleSheet.create({
     backgroundColor: white,
   },
   listContainer: {
-    width: Dimensions.get("window").width / 2 - 40,
-    backgroundColor: "white",
-    display: "flex",
+    width: Dimensions.get('window').width / 2 - 40,
+    backgroundColor: 'white',
+    display: 'flex',
     margin: 10,
     borderRadius: 20,
-    shadowColor: "#171717",
+    shadowColor: '#171717',
     shadowOffset: { width: -1, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
@@ -109,16 +117,16 @@ const styles = StyleSheet.create({
   textContainer: {
     margin: 15,
     borderRadius: 10,
-    overflow: "hidden",
-    display: "flex",
-    alignItems: "center",
+    overflow: 'hidden',
+    display: 'flex',
+    alignItems: 'center',
   },
   nameText: {
-    color: "black",
-    fontWeight: "bold",
+    color: 'black',
+    fontWeight: 'bold',
     marginLeft: 15,
     height: 50,
-    textAlign: "center",
+    textAlign: 'center',
   },
   // priceText: {
   //   color: "orange",
