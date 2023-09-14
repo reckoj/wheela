@@ -50,7 +50,7 @@ const Map = () => {
   useEffect(() => {
     if (!origin || !destination) return;
     mapRef.current.fitToSuppliedMarkers(["origin", "destination"], {
-      edgePadding: { top: 230, bottom: 230, left: 230 },
+      edgePadding: { top: 150, bottom: 150, left: 150, right: 150},
     });
   }, [origin, destination]);
 
@@ -76,9 +76,10 @@ const Map = () => {
   return (
     <View style={styles.container}>
       <MapView
+        
         ref={mapRef}
-        style={{ flex: 1 }}
-        // mapType="mutedStandard"
+        style={{ flex: 1 ,}}
+        mapType="mutedStandard"
         initialRegion={mapRegion}
       >
         <TextInput />

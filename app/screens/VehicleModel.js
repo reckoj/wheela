@@ -93,6 +93,7 @@ const VehicleModel = ({ navigation, props }) => {
           keyExtractor={(item) => item.id}
           numColumns={2}
           showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ marginBottom: 250 }}
         />
       </View>
     </SafeAreaView>

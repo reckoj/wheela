@@ -22,6 +22,8 @@ const SelectCarBtn = (props) => {
   const travelTime = useSelector(selectTravelTimeInformation);
   const travelDistance = travelTime?.distance.text;
   const travelDuration = travelTime?.duration.text;
+
+  console.log("info " + travelDistance + " " + travelDuration)
   return (
     <Pressable
       style={[PressableIconStyles.container, PressableIconStyles.shadowProp]}

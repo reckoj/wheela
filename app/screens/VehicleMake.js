@@ -28,19 +28,22 @@ const { white, secondary, lightGrey } = colors;
 const VehicleMake = ({ navigation }) => {
   const options = {
     method: 'GET',
-    url: 'https://car-data.p.rapidapi.com/cars',
+    url: 'https://car-data.p.rapidapi.com/cars/makes',
     params: { limit: '10', page: '0' },
     headers: {
       'X-RapidAPI-Key': '9f067022f9msh8d829aae7abdf42p128dc7jsn5dfa84fcbef8',
       'X-RapidAPI-Host': 'car-data.p.rapidapi.com',
     },
   };
+  let carmake ;
 
   useEffect(() => {
     axios
       .request(options)
       .then((response) => {
         let res = response.data;
+        carmake = res.sort();
+        console.log(carmake)
       })
       .catch(function (error) {
         console.error(error);
@@ -50,7 +53,7 @@ const VehicleMake = ({ navigation }) => {
   const make = useSelector(selectMake);
   const dispatch = useDispatch();
 
-  const renderItem = ({ item, index }) => {
+  const renderItem = ({index }) => {
     return (
       <MotiView
         style={styles.listContainer}
@@ -59,14 +62,14 @@ const VehicleMake = ({ navigation }) => {
         transition={{ delay: 100 + index * 60 }}
       >
         <TouchableOpacity
-          style={styles.imageContainer}
+          style={styles.textContainer}
           onPress={() => {
-            navigation.navigate('VehicleModel', { make: item.make });
-            dispatch(setMake(item.make));
+            navigation.navigate('VehicleModel', { make: carmake});
+            dispatch(setMake(carmake));
           }}
         >
-          <Image source={item.image} style={styles.image} />
-          <Text>{item.make}</Text>
+          {/* <Image source={item.image} style={styles.image} /> */}
+          <Text style={styles.nameText}>{make}</Text>
         </TouchableOpacity>
       </MotiView>
     );
@@ -111,7 +114,7 @@ const VehicleMake = ({ navigation }) => {
           keyExtractor={(item) => item.id}
           numColumns={2}
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ marginBottom: 150 }}
+          contentContainerStyle={{ marginBottom: 250 }}
         />
       </View>
     </SafeAreaView>
@@ -126,7 +129,6 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width / 2 - 40,
     backgroundColor: 'white',
     display: 'flex',
-
     margin: 10,
     borderRadius: 20,
     shadowColor: '#171717',
@@ -134,25 +136,79 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 3,
   },
-  imageContainer: {
+  textContainer: {
     margin: 15,
     borderRadius: 10,
     overflow: 'hidden',
     display: 'flex',
     alignItems: 'center',
   },
-  image: {
-    width: '90%',
-    height: undefined,
-    aspectRatio: 1,
-    resizeMode: 'contain',
-  },
-
   nameText: {
     color: 'black',
     fontWeight: 'bold',
     marginLeft: 15,
+    height: 50,
+    textAlign: 'center',
   },
+  // priceText: {
+  //   color: "orange",
+  //   fontWeight: "bold",
+  //   marginLeft: 15,
+  //   marginTop: 10,
+  // },
+  // button: {
+  //   backgroundColor: "#62513E",
+  //   padding: 10,
+  //   margin: 15,
+  //   borderRadius: 10,
+  // },
+  // buttonText: {
+  //   color: "white",
+  //   textAlign: "center",
+  // },
 });
+
+// const styles = StyleSheet.create({
+//   container: {
+//     backgroundColor: white,
+//   },
+//   listContainer: {
+//     width: Dimensions.get('window').width / 2 - 40,
+//     backgroundColor: 'white',
+//     display: 'flex',
+//     margin: 10,
+//     borderRadius: 20,
+//     shadowColor: '#171717',
+//     shadowOffset: { width: -1, height: 1 },
+//     shadowOpacity: 0.2,
+//     shadowRadius: 3,
+//   },
+//   textContainer: {
+//     margin: 15,
+//     borderRadius: 10,
+//     overflow: 'hidden',
+//     display: 'flex',
+//     alignItems: 'center',
+//   },
+//   imageContainer: {
+//     margin: 15,
+//     borderRadius: 10,
+//     overflow: 'hidden',
+//     display: 'flex',
+//     alignItems: 'center',
+//   },
+//   image: {
+//     width: '90%',
+//     height: undefined,
+//     aspectRatio: 1,
+//     resizeMode: 'contain',
+//   },
+
+//   nameText: {
+//     color: 'black',
+//     fontWeight: 'bold',
+//     marginLeft: 15,
+//   },
+// });
 
 export default VehicleMake;
