@@ -12,6 +12,8 @@ import { useNavigation } from "@react-navigation/native";
 import MapViewDirections from "react-native-maps-directions";
 import { GOOGLE_MAPS_APIKEY } from "@env";
 import { colors } from "./Colors";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import {scale} from 'react-native-size-matters';
 
 const { white, black, primary, secondary, tertiary } = colors;
 
@@ -46,11 +48,15 @@ const Map = () => {
   const mapRef = useRef(null);
   const dispatch = useDispatch();
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets()
 
   useEffect(() => {
     if (!origin || !destination) return;
+    // mapRef.current.fitToCoordinates(["origin", "destination"], {
+    //   edgePadding: { top: insets.top + scale(15), bottom: scale(15), left: scale(15), right: scale(15)},
+    // })
     mapRef.current.fitToSuppliedMarkers(["origin", "destination"], {
-      edgePadding: { top: 150, bottom: 150, left: 150, right: 150},
+      edgePadding: { top: insets.top + scale(50), bottom: scale(50), left: scale(50), right: scale(50)},
     });
   }, [origin, destination]);
 

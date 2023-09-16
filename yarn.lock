@@ -8851,6 +8851,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-size-matters@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "react-native-size-matters@npm:0.4.0"
+  peerDependencies:
+    react-native: "*"
+  checksum: 8ad239c76410968cbf8b5a5ded49e8b08d10aa0c775fad0d074adda409efb571332ccdb24562cae8c8fc95b36af5755b280749b8bd093dc13eb8123a3645b03d
+  languageName: node
+  linkType: hard
+
 "react-native-svg-transformer@npm:^1.1.0":
   version: 1.1.0
   resolution: "react-native-svg-transformer@npm:1.1.0"
@@ -10823,6 +10832,7 @@ __metadata:
     react-native-reanimated: ~2.12.0
     react-native-safe-area-context: 4.4.1
     react-native-screens: ~3.18.0
+    react-native-size-matters: ^0.4.0
     react-native-svg: 13.4.0
     react-native-svg-transformer: ^1.1.0
     react-native-vector-icons: ^9.2.0

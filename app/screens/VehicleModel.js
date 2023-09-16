@@ -19,17 +19,15 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import BackButton from '../components/BackButton';
 import data from '../hooks/apiRequests/CallCarsApi';
 import { useState } from 'react';
-import { useRoute } from '@react-navigation/native';
-import { setModel } from '../../slices/carSlice';
-import { useDispatch } from 'react-redux';
+import {  setVehicleInformationModel,  } from "../../slices/carSlice";
+import { useDispatch} from 'react-redux';
+
 
 const { white, secondary, lightGrey } = colors;
 
-const VehicleModel = ({ navigation, props }) => {
-  const [selectedModel, setSelectedModel] = useState();
-  const route = useRoute(); // retrieve the route object
-  const make = route.params?.make;
-  console.log(make, 'from the models page');
+const VehicleModel = ({ navigation }) => {
+  const dispatch = useDispatch();
+ 
   const renderItem = ({ item, index }) => {
     return (
       <MotiView
@@ -41,11 +39,8 @@ const VehicleModel = ({ navigation, props }) => {
         <TouchableOpacity
           style={styles.textContainer}
           onPress={() => {
-            navigation.navigate('VehicleYear', {
-              model: item.model,
-              make: make,
-            });
-
+            dispatch(setVehicleInformationModel({model:item.model}));
+            navigation.navigate("VehicleYear");
             console.log(item.model);
           }}
         >

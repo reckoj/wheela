@@ -20,56 +20,28 @@ import Nav2 from "../../assets/images/navigator2.svg";
 import axios from "axios";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import {selectVehcicleInformationMake, selectVehcicleInformationModel, selectVehcicleInformationYear } from "../../slices/carSlice";
+
 
 const { white, black, primary, secondary, tertiary, darkGrey } = colors;
 
 const TripResult = () => {
-  const route = useRoute(); // retrieve the route object
-  const make = route.params?.make;
-  const model = route.params?.model;
-  const year = route.params?.year;
+  const make = useSelector(selectVehcicleInformationMake);
+  const model = useSelector(selectVehcicleInformationModel);
+  const year = useSelector(selectVehcicleInformationYear);
 
-  const [carMake, setCarMake] = useState();
-  const [carYear, setCarYear] = useState();
-  const [carModel, setCarModel] = useState();
-  const [carMpg, setcarMpg] = useState();
+  const selectedMake = make?.make;
+  const selectedModel = model?.model;
+  const selectedYear = year?.year;
+
+
   const [isCollapsed, setIsCollapsed] = useState(true);
 
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
   };
 
-  const options = {
-    method: "GET",
-    url: `https://api.api-ninjas.com/v1/cars?`,
-    params: { limit: "10", page: "0", model: model, year: year, make: make },
-    headers: {
-      "X-Api-Key": process.env.API_NINJA_APIKEY,
-    },
-  };
-  const getCarData = () => {
-    axios
-      .request(options)
-      .then((response) => {
-        let res = response.data;
-        // console.log(res[0], 'newapis');
-        const selectedMake = res[0].make;
-        const selectedModel = res[0].model;
-        const selectedYear = res[0].year;
-        // const mpg = res[0].combination_mpg;
-
-        setCarMake(selectedMake);
-        setCarModel(selectedModel);
-        setCarYear(selectedYear);
-        setcarMpg(mpg);
-        console.log(carMake, carModel, carYear, carMpg);
-      })
-      .catch(function (error) {
-        console.error(error);
-      });
-  };
-
-  const [chosenVehicle, setChosenVehicle] = useState(`${carYear}`);
+  
   const travelTime = useSelector(selectTravelTimeInformation);
   const travelDistance = travelTime?.distance.text;
   const travelDistanceVal = travelTime?.distance.text;
@@ -81,17 +53,14 @@ const TripResult = () => {
   const milesPerLitre = 16.2;
   const gasPriceLitre = 1.46;
   const costPerFill = tankCapacityLitres * gasPriceLitre;
-
   const totalRangeOnFillTank = milesPerLitre * tankCapacityLitres;
-
   const numOfStopToFill = tripInKilometers / totalRangeOnFillTank / 1000;
-
   const oneWayTotal = Math.round(numOfStopToFill * costPerFill);
 
   return (
     <View style={styles.container}>
       <Card style={{ backgroundColor: white }}>
-        {!isCollapsed ? (
+        {isCollapsed ? (
           <View style={{ marginVertical: 10, marginHorizontal: 20 }}>
             <Pressable
               onPress={toggleCollapse}
@@ -110,14 +79,14 @@ const TripResult = () => {
               <Text style={[ {fontSize: 12, color: primary}]}>Close</Text>
             </Pressable>
 
-            <Nav2 width={280} height={180} style={{ alignSelf: "center" }} />
+            <Nav2 width={200} height={110} style={{ alignSelf: "center" }} />
             <View>
               <Text style={styles.headerTextMain}>
                 {
                   //todo add selected vehicle
                 }
-                {/* {carYear} {carMake} {carModel} */}
-                2023 Porche Cayenne
+                {selectedMake} {selectedModel} {selectedYear}
+               
               </Text>
             </View>
             <View style={{ marginVertical: 20 }}>
@@ -183,7 +152,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
 
     // padding: 20,
-    width: 250,
+    // width: 250,
   },
   headerText: {
     fontSize: 18,

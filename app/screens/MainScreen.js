@@ -26,16 +26,22 @@ import TripResult from "./TripResult";
 import { Card, Paragraph, Title, Button as Btn } from "react-native-paper";
 import Pana from "../../assets/images/pana.svg";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { selectVehcicleInformation, selectVehcicleInformationMake, selectVehcicleInformationModel, selectVehcicleInformationYear } from "../../slices/carSlice";
+
 
 const { white, lightGrey, primary, darkGrey } = colors;
 
 const MainScreen = ({ navigation }) => {
+
   const placesRef = useRef();
   const [startLocation, setStartLocation] = useState();
   const [dest, setDest] = useState();
   const [modalVisible, setModalVisible] = useState(false);
-  // const containerStyle = { backgroundColor: 'white', padding: 20 };
   const travelTime = useSelector(selectTravelTimeInformation);
+  const make = useSelector(selectVehcicleInformationMake);
+  const model = useSelector(selectVehcicleInformationModel);
+  const year = useSelector(selectVehcicleInformationYear);
+
 
   const [isCollapsed, setIsCollapsed] = useState(true);
 
@@ -44,6 +50,9 @@ const MainScreen = ({ navigation }) => {
   };
 
   const travelDuration = travelTime?.duration.text;
+  const selectedMake = make?.make;
+  const selectedModel = model?.model;
+  const selectedYear = year?.year;
   const dispatch = useDispatch();
 
   const getData = () => {};
@@ -60,155 +69,121 @@ const MainScreen = ({ navigation }) => {
             flexDirection: "column",
             alignItems: "center",
             width: "100%",
-            top: 120,
-            zIndex: 1,
+            top: 70,
+            // zIndex: 1,
           },
           styles.shadowProp,
         ]}
       >
-        {/* {dest && startLocation ? (
-          <View>
-            <Pressable
-              onPress={toggleCollapse}
-              style={[
-                {
-                  //todo instead of doing this I will push the input fields to the top similar like google maps 
-                  justifyContent: "center",
-                  alignItems: "center",
-                },
-              ]}
-            >
-              <MaterialCommunityIcons
-                name="chevron-double-right"
-                size={24}
-                color={primary}
-              />
-              <Text style={{ color: primary, fontSize: 12 }}>Exit</Text>
-            </Pressable>
-          </View>
-        ) : (
-          <></>
-        )} */}
+        <GooglePlacesAutocomplete
+          styles={placesStyles}
+          minLength={2}
+          enablePoweredByContainer={false}
+          returnKeyType={"search"}
+          placeholder="Starting location"
+          nearbyPlacesAPI="GooglePlacesSearch"
+          debounce={400}
+          query={{
+            key: process.env.GOOGLE_MAPS_APIKEY,
+            language: "en",
+          }}
+          fetchDetails={true}
+          onFail={(error) => console.log(error)}
+          onNotFound={() => console.log("no results")}
+          ref={placesRef}
+          onPress={(data, details = null) => {
+            setStartLocation({
+              location: details.geometry.location,
+              description: data.description,
+            });
+            dispatch(
+              setOrigin({
+                location: details.geometry.location,
+                description: data.description,
+              })
+            );
+            dispatch(setDestination(null));
+          }}
+        />
 
-        {/* {dest && startLocation ? (
-          <></>
-        ) : (
-          <> */}
-            <GooglePlacesAutocomplete
-              styles={placesStyles}
-              minLength={2}
-              enablePoweredByContainer={false}
-              returnKeyType={"search"}
-              placeholder="Starting location"
-              nearbyPlacesAPI="GooglePlacesSearch"
-              debounce={400}
-              query={{
-                key: process.env.GOOGLE_MAPS_APIKEY,
-                language: "en",
-              }}
-              fetchDetails={true}
-              onFail={(error) => console.log(error)}
-              onNotFound={() => console.log("no results")}
-              ref={placesRef}
-              onPress={(data, details = null) => {
-                setStartLocation({
-                  location: details.geometry.location,
-                  description: data.description,
-                });
-                dispatch(
-                  setOrigin({
-                    location: details.geometry.location,
-                    description: data.description,
-                  })
-                );
-                dispatch(setDestination(null));
-              }}
-            />
-
-            <TouchableOpacity
-              onPress={() => {}}
-              style={{
-                position: "absolute",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                left: 25,
-                top: 22,
-              }}
-            >
-              <Icon
-                name="locate"
-                size={24}
-                color={startLocation != null ? primary : lightGrey}
-              />
-            </TouchableOpacity>
-          {/* </>
-        )} */}
-      </View>
-
-      <View
-        style={[
-          {
+        <View
+          style={{
             position: "absolute",
             display: "flex",
-            flexDirection: "column",
             alignItems: "center",
-            width: "100%",
-            top: 210,
-          },
-          styles.shadowProp,
-        ]}
-      >
-        {/* {dest && startLocation ? (
-          <></>
-        ) : (
-          <> */}
-            <GooglePlacesAutocomplete
-              styles={placesStyles}
-              minLength={2}
-              enablePoweredByContainer={false}
-              returnKeyType={"search"}
-              placeholder="Destination"
-              nearbyPlacesAPI="GooglePlacesSearch"
-              fetchDetails={true}
-              debounce={400}
-              query={{
-                key: process.env.GOOGLE_MAPS_APIKEY,
-                language: "en",
-              }}
-              onPress={(data, details = null) => {
-                setDest({
+            justifyContent: "center",
+            left: 25,
+            top: 22,
+          }}
+        >
+          <Icon
+            name="locate"
+            size={24}
+            color={startLocation != null ? primary : lightGrey}
+          />
+        </View>
+      </View>
+      {!startLocation ? (
+        <></>
+      ) : (
+        <View
+          style={[
+            {
+              position: "absolute",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              width: "100%",
+              top: 138,
+            },
+            styles.shadowProp,
+          ]}
+        >
+          <GooglePlacesAutocomplete
+            styles={placesStyles}
+            minLength={2}
+            enablePoweredByContainer={false}
+            returnKeyType={"search"}
+            placeholder="Destination"
+            nearbyPlacesAPI="GooglePlacesSearch"
+            fetchDetails={true}
+            debounce={400}
+            query={{
+              key: process.env.GOOGLE_MAPS_APIKEY,
+              language: "en",
+            }}
+            onPress={(data, details = null) => {
+              setDest({
+                location: details.geometry.location,
+                description: data.description,
+              });
+              dispatch(
+                setDestination({
                   location: details.geometry.location,
                   description: data.description,
-                });
-                dispatch(
-                  setDestination({
-                    location: details.geometry.location,
-                    description: data.description,
-                  })
-                );
-                setDestination(data.place_id);
-              }}
+                })
+              );
+              setDestination(data.place_id);
+            }}
+          />
+          <View
+            style={{
+              position: "absolute",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              left: 25,
+              top: 22,
+            }}
+          >
+            <Icon
+              name="location-sharp"
+              size={24}
+              color={dest != null ? primary : lightGrey}
             />
-            <View
-              style={{
-                position: "absolute",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                left: 25,
-                top: 22,
-              }}
-            >
-              <Icon
-                name="location-sharp"
-                size={24}
-                color={dest != null ? primary : lightGrey}
-              />
-            </View>
-          {/* </>
-        )} */}
-      </View>
+          </View>
+        </View>
+      )}
 
       <View
         style={{
@@ -216,19 +191,18 @@ const MainScreen = ({ navigation }) => {
           flexDirection: "row",
           position: "absolute",
           bottom: 60,
-          left: "2%",
-          width: "70%",
+          left: 20,
+          width: 230,
         }}
       >
-        {
-          /**
-           * *uncomment this code to result
-           * TODO add ternery so that it shows trip result screen once cars are selected else it shows select car button
-           */
-          <TripResult />
+        {selectedMake && selectedModel && selectedYear ?
+        <TripResult />
+        :
+        <SelectCarBtn onPress={() => navigation.navigate("VehicleMake")} />
+          
         }
 
-        {/* <SelectCarBtn onPress={() => navigation.navigate('VehicleMake')} /> */}
+       
       </View>
 
       <View
@@ -243,6 +217,7 @@ const MainScreen = ({ navigation }) => {
         <MainButton
           onPress={() => {
             setModalVisible(true);
+          
           }}
         >
           <RegularText
@@ -362,7 +337,7 @@ const placesStyles = StyleSheet.create({
     paddingTop: 15,
     flex: 0,
     width: "90%",
-    marginBottom: 20,
+
     borderRadius: 15,
     // height: 65,
     display: "flex",

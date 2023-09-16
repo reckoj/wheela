@@ -23,27 +23,30 @@ const SelectCarBtn = (props) => {
   const travelDistance = travelTime?.distance.text;
   const travelDuration = travelTime?.duration.text;
 
-  console.log("info " + travelDistance + " " + travelDuration)
-  return (
+ 
+  return (<>
     <Pressable
       style={[PressableIconStyles.container, PressableIconStyles.shadowProp]}
       onPress={props.onPress}
       {...props}
+      disabled={!travelDistance && !travelDuration ? true : false}
     >
       <MaterialCommunityIcons
         style={{ marginRight: 10 }}
         name="car-outline"
         size={24}
+      
         color={!travelDistance && !travelDuration ? lightGrey : primary}
       />
       <SmallText style={{ fontSize: 16 }}>Select your vehicle...</SmallText>
     </Pressable>
+    </>
   );
 };
 
 const PressableIconStyles = StyleSheet.create({
   container: {
-    width: 250,
+    width: 230,
     height: 60,
     backgroundColor: white,
     borderRadius: 15,
