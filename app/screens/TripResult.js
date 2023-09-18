@@ -20,8 +20,11 @@ import Nav2 from "../../assets/images/navigator2.svg";
 import axios from "axios";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import {selectVehcicleInformationMake, selectVehcicleInformationModel, selectVehcicleInformationYear } from "../../slices/carSlice";
-
+import {
+  selectVehcicleInformationMake,
+  selectVehcicleInformationModel,
+  selectVehcicleInformationYear,
+} from "../../slices/carSlice";
 
 const { white, black, primary, secondary, tertiary, darkGrey } = colors;
 
@@ -34,14 +37,12 @@ const TripResult = () => {
   const selectedModel = model?.model;
   const selectedYear = year?.year;
 
-
   const [isCollapsed, setIsCollapsed] = useState(true);
 
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
   };
 
-  
   const travelTime = useSelector(selectTravelTimeInformation);
   const travelDistance = travelTime?.distance.text;
   const travelDistanceVal = travelTime?.distance.text;
@@ -51,7 +52,7 @@ const TripResult = () => {
   const tankCapacityLitres = 50;
   //TODO need to add actual vehicle mpg or km/litre
   const milesPerLitre = 16.2;
-  const gasPriceLitre = 1.46;
+  const gasPriceLitre = 5.46;
   const costPerFill = tankCapacityLitres * gasPriceLitre;
   const totalRangeOnFillTank = milesPerLitre * tankCapacityLitres;
   const numOfStopToFill = tripInKilometers / totalRangeOnFillTank / 1000;
@@ -67,16 +68,14 @@ const TripResult = () => {
               style={{
                 justifyContent: "center",
                 alignItems: "center",
-                
               }}
             >
               <MaterialCommunityIcons
-            
                 name="chevron-double-down"
                 size={24}
                 color={primary}
               />
-              <Text style={[ {fontSize: 12, color: primary}]}>Close</Text>
+              <Text style={[{ fontSize: 12, color: primary }]}>Close</Text>
             </Pressable>
 
             <Nav2 width={200} height={110} style={{ alignSelf: "center" }} />
@@ -86,7 +85,6 @@ const TripResult = () => {
                   //todo add selected vehicle
                 }
                 {selectedMake} {selectedModel} {selectedYear}
-               
               </Text>
             </View>
             <View style={{ marginVertical: 20 }}>
@@ -116,27 +114,60 @@ const TripResult = () => {
                 </Text>
               </View>
             </View>
+            <View
+              style={{
+                display: "felx",
+                justifyContent: "flex-end",
+                alignItems: "flex-end",
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => console.log("hello")}
+                style={{
+                  position: "relative",
+                  width: 60,
+
+                  borderWidth: 2,
+                  borderTopLeftRadius: 20,
+                  borderTopRightRadius: 20,
+                  borderBottomLeftRadius: 20,
+                  borderBottomRightRadius: 20,
+                  borderColor: secondary,
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 18,
+                    fontWeight: "bold",
+                    fontFamily: "Amaranth-reg",
+                    color: primary,
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  Clear
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         ) : (
           <View>
             <Pressable
               onPress={toggleCollapse}
               style={[
-               
                 {
                   justifyContent: "center",
                   alignItems: "center",
-                  
                 },
               ]}
             >
               <MaterialCommunityIcons
-             
                 name="chevron-double-up"
                 size={24}
                 color={primary}
               />
-              <Text style={{color: primary, fontSize: 12}}>Info</Text>
+              <Text style={{ color: primary, fontSize: 12 }}>Info</Text>
             </Pressable>
           </View>
         )}

@@ -13,7 +13,7 @@ import MapViewDirections from "react-native-maps-directions";
 import { GOOGLE_MAPS_APIKEY } from "@env";
 import { colors } from "./Colors";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import {scale} from 'react-native-size-matters';
+import { scale } from "react-native-size-matters";
 
 const { white, black, primary, secondary, tertiary } = colors;
 
@@ -48,7 +48,7 @@ const Map = () => {
   const mapRef = useRef(null);
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const insets = useSafeAreaInsets()
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     if (!origin || !destination) return;
@@ -56,7 +56,12 @@ const Map = () => {
     //   edgePadding: { top: insets.top + scale(15), bottom: scale(15), left: scale(15), right: scale(15)},
     // })
     mapRef.current.fitToSuppliedMarkers(["origin", "destination"], {
-      edgePadding: { top: insets.top + scale(50), bottom: scale(50), left: scale(50), right: scale(50)},
+      edgePadding: {
+        top: insets.top + scale(50),
+        bottom: scale(50),
+        left: scale(50),
+        right: scale(50),
+      },
     });
   }, [origin, destination]);
 
@@ -82,10 +87,9 @@ const Map = () => {
   return (
     <View style={styles.container}>
       <MapView
-        
         ref={mapRef}
-        style={{ flex: 1 ,}}
-        mapType="mutedStandard"
+        style={{ flex: 1 }}
+        // mapType="mutedStandard"
         initialRegion={mapRegion}
       >
         <TextInput />

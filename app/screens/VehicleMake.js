@@ -1,35 +1,95 @@
 import {
   View,
   Text,
-  
   StyleSheet,
   SafeAreaView,
-
   FlatList,
   Dimensions,
- 
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { MotiView } from "moti";
 import { colors } from "../components/Colors";
 import RegularText from "../components/texts/RegularText";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import BackButton from "../components/BackButton";
 import data from "../hooks/apiRequests/CallCarsApi";
-import { useState } from "react";
-import { useDispatch,  } from "react-redux";
-import {  setVehicleInformationMake,  } from "../../slices/carSlice";
+import { useDispatch } from "react-redux";
+import { setVehicleInformationMake } from "../../slices/carSlice";
+import { ActivityInd } from "../components/ActivityInd";
+import { useEffect } from "react";
+import axios from "axios";
 
 const { white, secondary, lightGrey } = colors;
 
 const VehicleMake = ({ navigation }) => {
   const dispatch = useDispatch();
+  const [isLoading, setLoading] = useState(true);
+  const [makes, setCarMakes] = useState([]);
+
+  // useEffect(async () => {
+  //   const options = {
+  //     method: "GET",
+  //     url: "https://car-data.p.rapidapi.com/cars/makes",
+  //     headers: {
+  //       "X-RapidAPI-Key": "9f067022f9msh8d829aae7abdf42p128dc7jsn5dfa84fcbef8",
+  //       "X-RapidAPI-Host": "car-data.p.rapidapi.com",
+  //     },
+  //   };
+
+  //   try {
+  //     setLoading();
+
+  //     const response = await axios.request(options);
+  //     setLoading(false);
+
+  //     console.log(response.data);
+  //     let testR = response.json();
+  //     console.log(testR);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }, [makes]);
+
+  const options = {
+    method: "GET",
+    url: "https://car-data.p.rapidapi.com/cars/makes",
+    params: { limit: "10", page: "0" },
+    headers: {
+      "X-RapidAPI-Key": "9f067022f9msh8d829aae7abdf42p128dc7jsn5dfa84fcbef8",
+      "X-RapidAPI-Host": "car-data.p.rapidapi.com",
+    },
+  };
+
+  // useEffect(() => {
+  //   try {
+  //     setLoading();
+  //     axios
+  //       .request(options)
+  //       .then((response) => {
+  //         let res = response.data;
+  //         setLoading(false);
+  //         // console.log(res);
+  //         // console.log("\n");
+  //         let arra = res.sort();
+  //         // console.log(arra);
+  //         let newSplit = arra.toString().split(",");
+  //         console.log(newSplit);
+
+  //         setCarMakes(newSplit);
+
+  //         console.log("This is my cars sorted \n" + makes);
+  //       })
+  //       .catch(function (error) {
+  //         console.error(error);
+  //       });
+  //   } catch (error) {}
+  // }, []);
 
   const renderItem = ({ item, index }) => {
     return (
       <MotiView
-        style={styles.listContainer}
+        style={[styles.listContainer]}
         from={{ opacity: 0, translateY: 50 }}
         animate={{ opacity: 1, translateY: 0 }}
         transition={{ delay: 100 + index * 40 }}
@@ -37,12 +97,18 @@ const VehicleMake = ({ navigation }) => {
         <TouchableOpacity
           style={styles.imageContainer}
           onPress={() => {
-            dispatch(setVehicleInformationMake({make:item.make}));
+            dispatch(setVehicleInformationMake({ make: item.make }));
+
             navigation.navigate("VehicleModel");
 
-            console.log(item.make);
+            console.log(makes);
           }}
         >
+          {/* {makes.map((carName, index) => (
+            <Text key={index} style={styles.nameText}>
+              {carName}
+            </Text>
+          ))} */}
           <Text style={styles.nameText}>{item.make}</Text>
 
           {/* <Image source={item.make} style={styles.image} /> */}
@@ -52,45 +118,65 @@ const VehicleMake = ({ navigation }) => {
   };
   return (
     <SafeAreaView style={{ backgroundColor: white }}>
-      <View
-        style={[
-          styles.container,
-          {
-            position: "relative",
-            marginHorizontal: 20,
-            backgroundColor: white,
-          },
-        ]}
-      >
+      {!isLoading ? (
         <View
           style={{
-            display: "flex",
+            borderBlockColor: "white",
+            flex: 1,
+
+            backgroundColor: white,
+            position: "relative",
             justifyContent: "center",
-            marginVertical: 20,
+            alignItems: "center",
+            top: 300,
           }}
         >
-          <BackButton onPress={() => navigation.navigate("MainScreen")} />
-          <RegularText
+          <ActivityInd />
+        </View>
+      ) : (
+        <View
+          style={[
+            styles.container,
+            {
+              position: "relative",
+              marginHorizontal: 20,
+              backgroundColor: white,
+            },
+          ]}
+        >
+          <View
             style={{
-              position: "absolute",
-              alignSelf: "center",
-              letterSpacing: 1,
               display: "flex",
-              fontSize: 20,
-              fontWeight: "bold",
+              justifyContent: "center",
+              marginVertical: 20,
             }}
           >
-            Select Make
-          </RegularText>
+            <BackButton onPress={() => navigation.navigate("MainScreen")} />
+            <RegularText
+              style={{
+                position: "absolute",
+                alignSelf: "center",
+                letterSpacing: 1,
+                display: "flex",
+                fontSize: 20,
+                fontWeight: "bold",
+              }}
+            >
+              Select Make
+            </RegularText>
+          </View>
+
+          <View>
+            <FlatList
+              data={data}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.id}
+              numColumns={2}
+              showsVerticalScrollIndicator={false}
+            />
+          </View>
         </View>
-        <FlatList
-          data={data}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          numColumns={2}
-          showsVerticalScrollIndicator={false}
-        />
-      </View>
+      )}
     </SafeAreaView>
   );
 };
@@ -105,7 +191,7 @@ const styles = StyleSheet.create({
     display: "flex",
 
     margin: 10,
-    // borderRadius: 20,
+    borderRadius: 20,
     shadowColor: "#171717",
     shadowOffset: { width: -1, height: 1 },
     shadowOpacity: 0.2,

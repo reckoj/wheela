@@ -1,13 +1,10 @@
 import {
   View,
   Text,
-  
   StyleSheet,
   SafeAreaView,
-
   FlatList,
   Dimensions,
- 
   TouchableOpacity,
 } from "react-native";
 import React from "react";
@@ -18,8 +15,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import BackButton from "../components/BackButton";
 import data from "../hooks/apiRequests/CallCarsApi";
 import { useState } from "react";
-import { useDispatch,  } from "react-redux";
-import {  setVehicleInformationYear,  } from "../../slices/carSlice";
+import { useDispatch } from "react-redux";
+import { setVehicleInformationYear } from "../../slices/carSlice";
 
 const { white, secondary, lightGrey } = colors;
 
@@ -37,7 +34,7 @@ const VehicleYear = ({ navigation }) => {
         <TouchableOpacity
           style={styles.imageContainer}
           onPress={() => {
-            dispatch(setVehicleInformationYear({year:item.year}));
+            dispatch(setVehicleInformationYear({ year: item.year }));
             navigation.navigate("MainScreen");
 
             console.log(item.year);
@@ -105,7 +102,7 @@ const styles = StyleSheet.create({
     display: "flex",
 
     margin: 10,
-    // borderRadius: 20,
+    borderRadius: 20,
     shadowColor: "#171717",
     shadowOffset: { width: -1, height: 1 },
     shadowOpacity: 0.2,
@@ -134,4 +131,3 @@ const styles = StyleSheet.create({
 });
 
 export default VehicleYear;
-

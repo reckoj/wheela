@@ -25,30 +25,34 @@ import {
 import TripResult from "./TripResult";
 import { Card, Paragraph, Title, Button as Btn } from "react-native-paper";
 import Pana from "../../assets/images/pana.svg";
+import BestPlace from "../../assets/images/bestPlace.svg";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { selectVehcicleInformation, selectVehcicleInformationMake, selectVehcicleInformationModel, selectVehcicleInformationYear } from "../../slices/carSlice";
-
+import {
+  selectVehcicleInformation,
+  selectVehcicleInformationMake,
+  selectVehcicleInformationModel,
+  selectVehcicleInformationYear,
+} from "../../slices/carSlice";
 
 const { white, lightGrey, primary, darkGrey } = colors;
 
 const MainScreen = ({ navigation }) => {
-
   const placesRef = useRef();
   const [startLocation, setStartLocation] = useState();
   const [dest, setDest] = useState();
   const [modalVisible, setModalVisible] = useState(false);
+  const [selected, setSelected] = useState(false);
   const travelTime = useSelector(selectTravelTimeInformation);
   const make = useSelector(selectVehcicleInformationMake);
   const model = useSelector(selectVehcicleInformationModel);
   const year = useSelector(selectVehcicleInformationYear);
-
 
   const [isCollapsed, setIsCollapsed] = useState(true);
 
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
   };
-
+  const travelDistance = travelTime?.distance.text;
   const travelDuration = travelTime?.duration.text;
   const selectedMake = make?.make;
   const selectedModel = model?.model;
@@ -70,7 +74,7 @@ const MainScreen = ({ navigation }) => {
             alignItems: "center",
             width: "100%",
             top: 70,
-            // zIndex: 1,
+            zIndex: selected ? 1 : 0,
           },
           styles.shadowProp,
         ]}
@@ -153,6 +157,7 @@ const MainScreen = ({ navigation }) => {
               language: "en",
             }}
             onPress={(data, details = null) => {
+              setSelected(true);
               setDest({
                 location: details.geometry.location,
                 description: data.description,
@@ -195,14 +200,11 @@ const MainScreen = ({ navigation }) => {
           width: 230,
         }}
       >
-        {selectedMake && selectedModel && selectedYear ?
-        <TripResult />
-        :
-        <SelectCarBtn onPress={() => navigation.navigate("VehicleMake")} />
-          
-        }
-
-       
+        {selectedMake && selectedModel && selectedYear ? (
+          <TripResult />
+        ) : (
+          <SelectCarBtn onPress={() => navigation.navigate("VehicleMake")} />
+        )}
       </View>
 
       <View
@@ -217,7 +219,6 @@ const MainScreen = ({ navigation }) => {
         <MainButton
           onPress={() => {
             setModalVisible(true);
-          
           }}
         >
           <RegularText
@@ -227,87 +228,170 @@ const MainScreen = ({ navigation }) => {
               fontFamily: "Amaranth-reg",
             }}
           >
-            Start Trip
+            {selectedMake && selectedModel && selectedYear
+              ? "Start trip"
+              : "View trip"}
           </RegularText>
         </MainButton>
       </View>
 
-      <Modal
-        style={modalStyles.container}
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <Card
-          // mode="outlined"
-          style={{
-            position: "absolute",
-            display: "flex",
-            justifyContent: "center",
-            alignContent: "center",
-            alignItems: "center",
-            alignSelf: "center",
-            height: 380,
-            top: 260,
-            backgroundColor: white,
-            width: 350,
+      {travelDuration && selectedYear ? (
+        <Modal
+          style={modalStyles.container}
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
           }}
         >
-          <Pana width={200} height={180} style={{ alignSelf: "center" }} />
-          <Card.Content
+          <Card
+            // mode="outlined"
             style={{
+              position: "absolute",
+              display: "flex",
               justifyContent: "center",
               alignContent: "center",
               alignItems: "center",
               alignSelf: "center",
+              height: 380,
+              top: 260,
+              backgroundColor: white,
+              width: 350,
             }}
           >
-            <Title>You’ve arrived at {"\n"} your destination!</Title>
-          </Card.Content>
-          <Card.Content style={{}}>
-            <Paragraph
+            <Pana width={200} height={180} style={{ alignSelf: "center" }} />
+            <Card.Content
               style={{
-                textAlign: "center",
+                justifyContent: "center",
+                alignContent: "center",
+                alignItems: "center",
+                alignSelf: "center",
               }}
             >
-              Time spent{" "}
-              <Text style={styles.regularText2}>{travelDuration}</Text>
-            </Paragraph>
-          </Card.Content>
-          <Card.Actions
-            style={{
-              alignSelf: "center",
-              top: 20,
-            }}
-          >
-            <MainButton
-              onPress={() => {
-                setModalVisible(!modalVisible);
-                navigation.navigate("MainScreen");
-              }}
-              style={{
-                padding: 15,
-
-                backgroundColor: primary,
-                borderRadius: 15,
-              }}
-            >
-              <RegularText
+              <Title>You’ve arrived at {"\n"} your destination!</Title>
+            </Card.Content>
+            <Card.Content style={{}}>
+              <Paragraph
                 style={{
-                  color: white,
-                  fontSize: 16,
-                  fontFamily: "Amaranth-reg",
+                  textAlign: "center",
                 }}
               >
-                Home
-              </RegularText>
-            </MainButton>
-          </Card.Actions>
-        </Card>
-      </Modal>
+                Time spent{" "}
+                <Text style={styles.regularText2}>{travelDuration}</Text>
+              </Paragraph>
+            </Card.Content>
+            <Card.Actions
+              style={{
+                alignSelf: "center",
+                top: 20,
+              }}
+            >
+              <MainButton
+                onPress={() => {
+                  setModalVisible(!modalVisible);
+                  navigation.navigate("MainScreen");
+                }}
+                style={{
+                  padding: 15,
+
+                  backgroundColor: primary,
+                  borderRadius: 15,
+                }}
+              >
+                <RegularText
+                  style={{
+                    color: white,
+                    fontSize: 16,
+                    fontFamily: "Amaranth-reg",
+                  }}
+                >
+                  Home
+                </RegularText>
+              </MainButton>
+            </Card.Actions>
+          </Card>
+        </Modal>
+      ) : (
+        <Modal
+          style={modalStyles.container}
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <Card
+            // mode="outlined"
+            style={{
+              position: "absolute",
+              display: "flex",
+              justifyContent: "center",
+              alignContent: "center",
+              alignItems: "center",
+              alignSelf: "center",
+              height: 380,
+              top: 260,
+              backgroundColor: white,
+              width: 350,
+            }}
+          >
+            <BestPlace
+              width={200}
+              height={180}
+              style={{ alignSelf: "center" }}
+            />
+
+            <Card.Content style={{}}>
+              <Paragraph
+                style={{
+                  textAlign: "center",
+                }}
+              >
+                This route will take you approximately {"\n"}{" "}
+                <Text style={styles.regularText2}>{travelDuration}</Text>
+              </Paragraph>
+              <Paragraph
+                style={{
+                  textAlign: "center",
+                }}
+              >
+                To your destination!
+              </Paragraph>
+            </Card.Content>
+            <Card.Actions
+              style={{
+                alignSelf: "center",
+                top: 20,
+              }}
+            >
+              <MainButton
+                onPress={() => {
+                  setModalVisible(!modalVisible);
+                  navigation.navigate("MainScreen");
+                }}
+                style={{
+                  padding: 15,
+
+                  backgroundColor: primary,
+                  borderRadius: 15,
+                }}
+              >
+                <RegularText
+                  style={{
+                    color: white,
+                    fontSize: 16,
+                    fontFamily: "Amaranth-reg",
+                  }}
+                >
+                  Okay
+                </RegularText>
+              </MainButton>
+            </Card.Actions>
+          </Card>
+        </Modal>
+      )}
     </>
   );
 };
