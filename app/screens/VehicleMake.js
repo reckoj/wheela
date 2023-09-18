@@ -24,7 +24,7 @@ const { white, secondary, lightGrey } = colors;
 
 const VehicleMake = ({ navigation }) => {
   const dispatch = useDispatch();
-  const [isLoading, setLoading] = useState(true);
+  const [isLoading, setLoading] = useState(false);
   const [makes, setCarMakes] = useState([]);
 
   // useEffect(async () => {
@@ -61,30 +61,31 @@ const VehicleMake = ({ navigation }) => {
     },
   };
 
-  // useEffect(() => {
-  //   try {
-  //     setLoading();
-  //     axios
-  //       .request(options)
-  //       .then((response) => {
-  //         let res = response.data;
-  //         setLoading(false);
-  //         // console.log(res);
-  //         // console.log("\n");
-  //         let arra = res.sort();
-  //         // console.log(arra);
-  //         let newSplit = arra.toString().split(",");
-  //         console.log(newSplit);
+  useEffect(() => {
+    try {
+      setLoading(true);
+      axios
+        .request(options)
+        .then((response) => {
+          let res = response.data;
+          setLoading(false);
+          // console.log(res);
+          // console.log("\n");
+          let arra = res.sort();
+          // console.log(arra);
+          let newSplit = arra.toString().split(",");
+          console.log(newSplit);
 
-  //         setCarMakes(newSplit);
+          setCarMakes(newSplit);
 
-  //         console.log("This is my cars sorted \n" + makes);
-  //       })
-  //       .catch(function (error) {
-  //         console.error(error);
-  //       });
-  //   } catch (error) {}
-  // }, []);
+          console.log("This is my cars \n" + makes);
+        })
+        .catch(function (error) {
+          console.error(error);
+          setLoading(false);
+        });
+    } catch (error) {}
+  }, []);
 
   const renderItem = ({ item, index }) => {
     return (
@@ -118,7 +119,7 @@ const VehicleMake = ({ navigation }) => {
   };
   return (
     <SafeAreaView style={{ backgroundColor: white }}>
-      {!isLoading ? (
+      {isLoading ? (
         <View
           style={{
             borderBlockColor: "white",
