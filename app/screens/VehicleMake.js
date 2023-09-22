@@ -6,6 +6,7 @@ import {
   FlatList,
   Dimensions,
   TouchableOpacity,
+  Button,
 } from "react-native";
 import React, { useState } from "react";
 import { MotiView } from "moti";
@@ -27,34 +28,15 @@ const VehicleMake = ({ navigation }) => {
   const [isLoading, setLoading] = useState(false);
   const [makes, setCarMakes] = useState([]);
 
-  // useEffect(async () => {
-  //   const options = {
-  //     method: "GET",
-  //     url: "https://car-data.p.rapidapi.com/cars/makes",
-  //     headers: {
-  //       "X-RapidAPI-Key": "9f067022f9msh8d829aae7abdf42p128dc7jsn5dfa84fcbef8",
-  //       "X-RapidAPI-Host": "car-data.p.rapidapi.com",
-  //     },
-  //   };
-
-  //   try {
-  //     setLoading();
-
-  //     const response = await axios.request(options);
-  //     setLoading(false);
-
-  //     console.log(response.data);
-  //     let testR = response.json();
-  //     console.log(testR);
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }, [makes]);
-
   const options = {
     method: "GET",
-    url: "https://car-data.p.rapidapi.com/cars/makes",
-    params: { limit: "10", page: "0" },
+    // url: "https://car-api2.p.rapidapi.com/api/makes",
+    // params: {
+    //   direction: "asc",
+    //   sort: "id",
+    // },
+    url: "https://car-data.p.rapidapi.com/cars",
+    params: { limit: "40" },
     headers: {
       "X-RapidAPI-Key": "9f067022f9msh8d829aae7abdf42p128dc7jsn5dfa84fcbef8",
       "X-RapidAPI-Host": "car-data.p.rapidapi.com",
@@ -62,122 +44,125 @@ const VehicleMake = ({ navigation }) => {
   };
 
   useEffect(() => {
-    try {
-      setLoading(true);
-      axios
-        .request(options)
-        .then((response) => {
-          let res = response.data;
-          setLoading(false);
-          // console.log(res);
-          // console.log("\n");
-          let arra = res.sort();
-          // console.log(arra);
-          let newSplit = arra.toString().split(",");
-          console.log(newSplit);
+    const fetchData = () => {
+      try {
+        setLoading(true);
+        axios
+          .request(options)
+          .then((response) => {
+            let res = response.data;
+            setLoading(false);
+            // console.log(res);
 
-          setCarMakes(newSplit);
+            setCarMakes(res);
+            // console.log("This is my cars \n" + makes);
+          })
+          .catch(function (error) {
+            console.error(error);
+            setLoading(false);
+          });
+      } catch (error) {}
+    };
 
-          console.log("This is my cars \n" + makes);
-        })
-        .catch(function (error) {
-          console.error(error);
-          setLoading(false);
-        });
-    } catch (error) {}
+    fetchData();
   }, []);
 
-  const renderItem = ({ item, index }) => {
+  // Extract the unique makes from the API response
+
+  // Render each item in the FlatList
+  const uniqueMakes = Array.from(new Set(makes.map((item) => item.make)));
+  const sortedMakes = uniqueMakes.sort();
+
+  const listfooter = () => {
+    <View style={{ marginBottom: 10, marginTop: 10 }}>
+      <Button title="Bu" />
+    </View>;
+  };
+
+  const listHeader = () => {
     return (
-      <MotiView
-        style={[styles.listContainer]}
-        from={{ opacity: 0, translateY: 50 }}
-        animate={{ opacity: 1, translateY: 0 }}
-        transition={{ delay: 100 + index * 40 }}
-      >
-        <TouchableOpacity
-          style={styles.imageContainer}
-          onPress={() => {
-            dispatch(setVehicleInformationMake({ make: item.make }));
-
-            navigation.navigate("VehicleModel");
-
-            console.log(makes);
-          }}
-        >
-          {/* {makes.map((carName, index) => (
-            <Text key={index} style={styles.nameText}>
-              {carName}
-            </Text>
-          ))} */}
-          <Text style={styles.nameText}>{item.make}</Text>
-
-          {/* <Image source={item.make} style={styles.image} /> */}
-        </TouchableOpacity>
-      </MotiView>
+      <View style={{ display: "flex" }}>
+        {/* <BackButton onPress={() => navigation.navigate("MainScreen")} /> */}
+        <RegularText style={{ fontWeight: "bold", fontSize: 20 }}>
+          Select Make
+        </RegularText>
+      </View>
     );
   };
   return (
-    <SafeAreaView style={{ backgroundColor: white }}>
-      {isLoading ? (
-        <View
-          style={{
-            borderBlockColor: "white",
-            flex: 1,
-
-            backgroundColor: white,
-            position: "relative",
-            justifyContent: "center",
-            alignItems: "center",
-            top: 300,
-          }}
-        >
-          <ActivityInd />
-        </View>
-      ) : (
-        <View
-          style={[
-            styles.container,
-            {
-              position: "relative",
-              marginHorizontal: 20,
-              backgroundColor: white,
-            },
-          ]}
-        >
+    <SafeAreaView style={{ backgroundColor: white, flex: 1 }}>
+      <View
+        style={{ displa: "flex", alignContent: "center", marginHorizontal: 20 }}
+      >
+        {isLoading ? (
           <View
             style={{
-              display: "flex",
+              borderBlockColor: "white",
+
+              backgroundColor: white,
+              position: "relative",
               justifyContent: "center",
-              marginVertical: 20,
+              alignItems: "center",
+              top: 300,
             }}
           >
-            <BackButton onPress={() => navigation.navigate("MainScreen")} />
-            <RegularText
+            <ActivityInd />
+          </View>
+        ) : (
+          <View>
+            {/* <View
               style={{
-                position: "absolute",
-                alignSelf: "center",
-                letterSpacing: 1,
                 display: "flex",
-                fontSize: 20,
-                fontWeight: "bold",
+                justifyContent: "center",
+                marginTop: 10,
               }}
             >
-              Select Make
-            </RegularText>
-          </View>
+              <BackButton onPress={() => navigation.navigate("MainScreen")} />
+              <RegularText
+                style={{
+                  position: "absolute",
+                  alignSelf: "center",
+                  letterSpacing: 1,
+                  display: "flex",
+                  fontSize: 20,
+                  fontWeight: "bold",
+                }}
+              >
+                Select Make
+              </RegularText>
+            </View> */}
 
-          <View>
-            <FlatList
-              data={data}
-              renderItem={renderItem}
-              keyExtractor={(item) => item.id}
-              numColumns={2}
-              showsVerticalScrollIndicator={false}
-            />
+            <View style={{ height: "100%" }}>
+              <FlatList
+                ListHeaderComponent={listHeader}
+                ListHeaderComponentStyle={styles.listHeaderStyle}
+                contentcontainerstyle={{ marginBottom: 100 }}
+                ListFooterComponentStyle
+                data={sortedMakes}
+                // keyExtractor={(item) => item.id}
+                numColumns={2}
+                showsVerticalScrollIndicator={false}
+                renderItem={({ item }) => {
+                  return (
+                    <View style={[styles.listContainer]}>
+                      <TouchableOpacity
+                        style={[styles.imageContainer]}
+                        onPress={() => {
+                          dispatch(setVehicleInformationMake({ make: item }));
+                          console.log(item);
+                          navigation.navigate("VehicleModel");
+                        }}
+                      >
+                        <Text style={styles.nameText}>{item}</Text>
+                      </TouchableOpacity>
+                    </View>
+                  );
+                }}
+              />
+            </View>
           </View>
-        </View>
-      )}
+        )}
+      </View>
     </SafeAreaView>
   );
 };
@@ -198,10 +183,18 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 3,
   },
+
+  listHeaderStyle: {
+    display: "flex",
+    height: 55,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+  },
   imageContainer: {
     margin: 15,
     // borderRadius: 10,
-    overflow: "hidden",
+    // overflow: "hidden",
     display: "flex",
     alignItems: "center",
   },
@@ -214,7 +207,7 @@ const styles = StyleSheet.create({
   nameText: {
     color: "black",
     fontWeight: "bold",
-    marginLeft: 15,
+    // marginLeft: 15,
     height: 50,
     textAlign: "center",
   },
