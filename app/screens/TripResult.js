@@ -7,7 +7,6 @@ import {
   Pressable,
 } from "react-native";
 import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
 import { selectTravelTimeInformation } from "../../slices/navSlice";
 import { Card, Paragraph, Title } from "react-native-paper";
 import { colors } from "../components/Colors";
@@ -21,10 +20,12 @@ import axios from "axios";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import {
+  clearAll,
   selectVehcicleInformationMake,
   selectVehcicleInformationModel,
   selectVehcicleInformationYear,
 } from "../../slices/carSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const { white, black, primary, secondary, tertiary, darkGrey } = colors;
 
@@ -48,6 +49,7 @@ const TripResult = () => {
   const travelDistanceVal = travelTime?.distance.text;
   const travelDuration = travelTime?.duration.text;
   const tripInKilometers = travelTime?.distance.value;
+  const dispatch = useDispatch();
 
   const tankCapacityLitres = 50;
   //TODO need to add actual vehicle mpg or km/litre
@@ -122,7 +124,10 @@ const TripResult = () => {
               }}
             >
               <TouchableOpacity
-                onPress={() => console.log("hello")}
+                onPress={() => {
+                  dispatch(clearAll());
+                  console.log("hello");
+                }}
                 style={{
                   position: "relative",
                   width: 60,

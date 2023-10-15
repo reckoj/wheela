@@ -14,7 +14,6 @@ import { colors } from "../components/Colors";
 import Map from "../components/Map";
 import SelectCarBtn from "../components/SelectCarBtn";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { GOOGLE_MAPS_APIKEY } from "@env";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -58,8 +57,6 @@ const MainScreen = ({ navigation }) => {
   const selectedModel = model?.model;
   const selectedYear = year?.year;
   const dispatch = useDispatch();
-
-  const getData = () => {};
 
   return (
     <>

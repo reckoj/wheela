@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   make: null,
@@ -10,7 +10,7 @@ const initialState = {
 };
 
 export const carSlice = createSlice({
-  name: 'car',
+  name: "car",
   initialState,
   reducers: {
     setMake: (state, action) => {
@@ -33,19 +33,30 @@ export const carSlice = createSlice({
     setVehicleInformationYear: (state, action) => {
       state.vehicleInformationYear = action.payload;
     },
+    clearAll: (state) => {
+      return {};
+    },
   },
 });
 
-export const { setMake, setModel, setYear,setVehicleInformationMake, setVehicleInformationModel, setVehicleInformationYear} = carSlice.actions;
+export const {
+  setMake,
+  setModel,
+  setYear,
+  setVehicleInformationMake,
+  setVehicleInformationModel,
+  setVehicleInformationYear,
+  clearAll,
+} = carSlice.actions;
 
 export const selectMake = (state) => state.car.make;
 export const selectModel = (state) => state.car.model;
 export const selectYear = (state) => state.car.year;
 export const selectVehcicleInformationMake = (state) =>
-state.car.vehicleInformationMake;
+  state.car.vehicleInformationMake;
 export const selectVehcicleInformationModel = (state) =>
-state.car.vehicleInformationModel;
+  state.car.vehicleInformationModel;
 export const selectVehcicleInformationYear = (state) =>
-state.car.vehicleInformationYear;
+  state.car.vehicleInformationYear;
 
 export default carSlice.reducer;

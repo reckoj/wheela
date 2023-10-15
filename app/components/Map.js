@@ -10,7 +10,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import MapViewDirections from "react-native-maps-directions";
-import { GOOGLE_MAPS_APIKEY } from "@env";
 import { colors } from "./Colors";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { scale } from "react-native-size-matters";

@@ -13,26 +13,34 @@ import { colors } from "../components/Colors";
 import RegularText from "../components/texts/RegularText";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import BackButton from "../components/BackButton";
-import data from "../hooks/apiRequests/CallCarsApi";
-import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { setVehicleInformationYear } from "../../slices/carSlice";
-import { ActivityInd } from "../components/ActivityInd";
 
-const { white, secondary, lightGrey } = colors;
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectVehcicleInformationMake,
+  selectVehcicleInformationModel,
+  setVehicleInformationYear,
+} from "../../slices/carSlice";
+import { ActivityInd } from "../components/ActivityInd";
+import axios from "axios";
+const { white, secondary, lightGrey, primary } = colors;
 
 const VehicleYear = ({ navigation }) => {
   const dispatch = useDispatch();
   const [isLoading, setLoading] = useState(false);
   const [years, setCarYears] = useState([]);
 
+  const make = useSelector(selectVehcicleInformationMake);
+  const model = useSelector(selectVehcicleInformationModel);
+
+  const selectedMake = make?.make;
+  const selectedModel = model?.model;
   const options = {
     method: "GET",
-    url: "https://car-data.p.rapidapi.com/cars",
-    // params: { limit: "40" },
+    url: "https://car-api2.p.rapidapi.com/api/years",
     headers: {
       "X-RapidAPI-Key": "9f067022f9msh8d829aae7abdf42p128dc7jsn5dfa84fcbef8",
-      "X-RapidAPI-Host": "car-data.p.rapidapi.com",
+      "X-RapidAPI-Host": "car-api2.p.rapidapi.com",
     },
   };
 
@@ -53,7 +61,9 @@ const VehicleYear = ({ navigation }) => {
             console.error(error);
             setLoading(false);
           });
-      } catch (error) {}
+      } catch (error) {
+        console.log(error);
+      }
     };
 
     fetchData();
@@ -61,88 +71,58 @@ const VehicleYear = ({ navigation }) => {
 
   //todo change the data in the flatlist
 
-  // const renderItem = ({ item, index }) => {
-  //   return (
-  //     <MotiView
-  //       style={styles.listContainer}
-  //       from={{ opacity: 0, translateY: 50 }}
-  //       animate={{ opacity: 1, translateY: 0 }}
-  //       transition={{ delay: 100 + index * 40 }}
-  //     >
-  //       <TouchableOpacity
-  //         style={styles.imageContainer}
-  //         onPress={() => {
-  //           dispatch(setVehicleInformationYear({ year: item.year }));
-  //           navigation.navigate("MainScreen");
+  const uniqueYear = years.map((item) => item);
 
-  //           console.log(item.year);
-  //         }}
-  //       >
-  //         <Text style={styles.nameText}>{item.year}</Text>
-
-  //       </TouchableOpacity>
-  //     </MotiView>
-  //   );
-  // };
-  const uniqueYear = Array.from(new Set(years.map((item) => item.year)));
-  const sortedYears = uniqueYear.sort();
   const listHeader = () => {
     return (
-      <View style={{ display: "flex" }}>
-        {/* <BackButton onPress={() => navigation.navigate("MainScreen")} /> */}
-        <RegularText style={{ fontWeight: "bold", fontSize: 20 }}>
+      <View
+        style={{
+          width: "100%",
+
+          flexDirection: "row",
+          // paddingHorizontal: 10,
+          // paddingBottom: 10,
+          // paddingTop: 5,
+          padding: 10,
+          justifyContent: "space-between",
+        }}
+      >
+        <BackButton onPress={() => navigation.navigate("VehicleModel")} />
+        <RegularText
+          style={{
+            alignSelf: "center",
+            letterSpacing: 1,
+
+            fontSize: 20,
+            fontWeight: "bold",
+          }}
+        >
           Select Year
         </RegularText>
+
+        <View
+          style={{
+            borderWidth: 1,
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: "50%",
+            height: 50,
+            width: 50,
+            borderColor: primary,
+          }}
+        >
+          <RegularText style={{ fontSize: 8 }}>{selectedMake}</RegularText>
+          <RegularText style={{ fontSize: 8 }}>{selectedModel}</RegularText>
+        </View>
       </View>
     );
   };
   return (
-    // <SafeAreaView style={{ backgroundColor: white }}>
-    //   <View
-    //     style={[
-    //       styles.container,
-    //       {
-    //         position: "relative",
-    //         marginHorizontal: 20,
-    //         backgroundColor: white,
-    //       },
-    //     ]}
-    //   >
-    //     <View
-    //       style={{
-    //         display: "flex",
-    //         justifyContent: "center",
-    //         marginVertical: 20,
-    //       }}
-    //     >
-    //       <BackButton onPress={() => navigation.navigate("VehicleModel")} />
-    //       <RegularText
-    //         style={{
-    //           position: "absolute",
-    //           alignSelf: "center",
-    //           letterSpacing: 1,
-    //           display: "flex",
-    //           fontSize: 20,
-    //           fontWeight: "bold",
-    //         }}
-    //       >
-    //         Select Year
-    //       </RegularText>
-    //     </View>
-    //     <FlatList
-    //       data={data}
-    //       renderItem={renderItem}
-    //       keyExtractor={(item) => item.id}
-    //       numColumns={2}
-    //       showsVerticalScrollIndicator={false}
-    //     />
-    //   </View>
-    // </SafeAreaView>
     <SafeAreaView style={{ backgroundColor: white, flex: 1 }}>
       <View
         style={{ displa: "flex", alignContent: "center", marginHorizontal: 20 }}
       >
-        {!isLoading ? (
+        {isLoading ? (
           <View
             style={{
               borderBlockColor: "white",
@@ -158,54 +138,34 @@ const VehicleYear = ({ navigation }) => {
           </View>
         ) : (
           <View>
-            {/* <View
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              marginTop: 10,
-            }}
-          >
-            <BackButton onPress={() => navigation.navigate("MainScreen")} />
-            <RegularText
-              style={{
-                position: "absolute",
-                alignSelf: "center",
-                letterSpacing: 1,
-                display: "flex",
-                fontSize: 20,
-                fontWeight: "bold",
-              }}
-            >
-              Select Make
-            </RegularText>
-          </View> */}
-
             <View style={{ height: "100%" }}>
               <FlatList
+                stickyHeaderIndices={[0]}
                 ListHeaderComponent={listHeader}
-                ListHeaderComponentStyle={styles.listHeaderStyle}
-                contentcontainerstyle={{ marginBottom: 100 }}
-                ListFooterComponentStyle
-                data={data}
+                data={uniqueYear}
                 // keyExtractor={(item) => item.id}
                 numColumns={2}
                 showsVerticalScrollIndicator={false}
-                renderItem={({ item }) => {
+                renderItem={({ item, index }) => {
                   return (
-                    <View style={[styles.listContainer]}>
+                    <MotiView
+                      style={[styles.listContainer]}
+                      from={{ opacity: 0, translateY: -50 }}
+                      animate={{ opacity: 1, translateY: 0 }}
+                      delay={index * 50}
+                    >
                       <TouchableOpacity
-                        style={[styles.imageContainer]}
+                        style={{ justifyContent: "center", height: "100%" }}
                         onPress={() => {
-                          dispatch(
-                            setVehicleInformationYear({ year: item.year })
-                          );
-                          console.log(item);
+                          dispatch(setVehicleInformationYear({ year: item }));
+
+                          // Navigate to the "NextScreen"
                           navigation.navigate("MainScreen");
                         }}
                       >
-                        <Text style={styles.nameText}>{item.year}</Text>
+                        <Text style={styles.nameText}>{item}</Text>
                       </TouchableOpacity>
-                    </View>
+                    </MotiView>
                   );
                 }}
               />
@@ -225,7 +185,7 @@ const styles = StyleSheet.create({
     width: Dimensions.get("window").width / 2 - 40,
     backgroundColor: "white",
     display: "flex",
-
+    height: 80,
     margin: 10,
     borderRadius: 20,
     shadowColor: "#171717",
@@ -233,17 +193,18 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 3,
   },
+
   listHeaderStyle: {
     display: "flex",
     height: 55,
     alignItems: "center",
     justifyContent: "center",
-    flexDirection: "row",
+    // flexDirection: "row",
   },
   imageContainer: {
-    margin: 15,
+    // margin: 10,
     // borderRadius: 10,
-    overflow: "hidden",
+    // overflow: "hidden",
     display: "flex",
     alignItems: "center",
   },
@@ -256,9 +217,16 @@ const styles = StyleSheet.create({
   nameText: {
     color: "black",
     fontWeight: "bold",
-    marginLeft: 15,
-    height: 50,
+
+    fontSize: 14,
+
     textAlign: "center",
+    color: "#000000",
+    alignSelf: "center",
+    justifyContent: "center",
+    alignItems: "center",
+    textAlignVertical: "center",
+    alignContent: "center",
   },
 });
 

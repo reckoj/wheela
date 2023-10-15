@@ -14,7 +14,6 @@ import { colors } from "../components/Colors";
 import RegularText from "../components/texts/RegularText";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import BackButton from "../components/BackButton";
-import data from "../hooks/apiRequests/CallCarsApi";
 import { useDispatch } from "react-redux";
 import { setVehicleInformationMake } from "../../slices/carSlice";
 import { ActivityInd } from "../components/ActivityInd";
@@ -30,16 +29,14 @@ const VehicleMake = ({ navigation }) => {
 
   const options = {
     method: "GET",
-    // url: "https://car-api2.p.rapidapi.com/api/makes",
-    // params: {
-    //   direction: "asc",
-    //   sort: "id",
-    // },
-    url: "https://car-data.p.rapidapi.com/cars",
-    params: { limit: "40" },
+    url: "https://car-api2.p.rapidapi.com/api/makes",
+    params: {
+      direction: "asc",
+      sort: "id",
+    },
     headers: {
       "X-RapidAPI-Key": "9f067022f9msh8d829aae7abdf42p128dc7jsn5dfa84fcbef8",
-      "X-RapidAPI-Host": "car-data.p.rapidapi.com",
+      "X-RapidAPI-Host": "car-api2.p.rapidapi.com",
     },
   };
 
@@ -52,10 +49,8 @@ const VehicleMake = ({ navigation }) => {
           .then((response) => {
             let res = response.data;
             setLoading(false);
-            // console.log(res);
 
-            setCarMakes(res);
-            // console.log("This is my cars \n" + makes);
+            setCarMakes(res.data);
           })
           .catch(function (error) {
             console.error(error);
@@ -67,25 +62,38 @@ const VehicleMake = ({ navigation }) => {
     fetchData();
   }, []);
 
-  // Extract the unique makes from the API response
-
   // Render each item in the FlatList
-  const uniqueMakes = Array.from(new Set(makes.map((item) => item.make)));
+  const uniqueMakes = Array.from(new Set(makes.map((item) => item.name)));
   const sortedMakes = uniqueMakes.sort();
-
-  const listfooter = () => {
-    <View style={{ marginBottom: 10, marginTop: 10 }}>
-      <Button title="Bu" />
-    </View>;
-  };
 
   const listHeader = () => {
     return (
-      <View style={{ display: "flex" }}>
-        {/* <BackButton onPress={() => navigation.navigate("MainScreen")} /> */}
-        <RegularText style={{ fontWeight: "bold", fontSize: 20 }}>
+      <View
+        style={{
+          width: "100%",
+          // backgroundColor: "red",
+          flexDirection: "row",
+          paddingHorizontal: 10,
+          paddingBottom: 10,
+          paddingTop: 5,
+          justifyContent: "space-between",
+        }}
+      >
+        <BackButton onPress={() => navigation.navigate("MainScreen")} />
+        <RegularText
+          style={{
+            // position: "absolute",
+            alignSelf: "center",
+            letterSpacing: 1,
+
+            fontSize: 20,
+            fontWeight: "bold",
+          }}
+        >
           Select Make
         </RegularText>
+
+        <View></View>
       </View>
     );
   };
@@ -110,43 +118,25 @@ const VehicleMake = ({ navigation }) => {
           </View>
         ) : (
           <View>
-            {/* <View
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                marginTop: 10,
-              }}
-            >
-              <BackButton onPress={() => navigation.navigate("MainScreen")} />
-              <RegularText
-                style={{
-                  position: "absolute",
-                  alignSelf: "center",
-                  letterSpacing: 1,
-                  display: "flex",
-                  fontSize: 20,
-                  fontWeight: "bold",
-                }}
-              >
-                Select Make
-              </RegularText>
-            </View> */}
-
             <View style={{ height: "100%" }}>
               <FlatList
+                stickyHeaderIndices={[0]}
                 ListHeaderComponent={listHeader}
-                ListHeaderComponentStyle={styles.listHeaderStyle}
-                contentcontainerstyle={{ marginBottom: 100 }}
-                ListFooterComponentStyle
                 data={sortedMakes}
                 // keyExtractor={(item) => item.id}
                 numColumns={2}
                 showsVerticalScrollIndicator={false}
-                renderItem={({ item }) => {
+                renderItem={({ item, index }) => {
                   return (
-                    <View style={[styles.listContainer]}>
+                    <MotiView
+                      style={[styles.listContainer]}
+                      from={{ opacity: 0, translateY: -50 }}
+                      animate={{ opacity: 1, translateY: 0 }}
+                      delay={index * 50}
+                    >
                       <TouchableOpacity
-                        style={[styles.imageContainer]}
+                        // style={[styles.imageContainer]}
+                        style={{ justifyContent: "center", height: "100%" }}
                         onPress={() => {
                           dispatch(setVehicleInformationMake({ make: item }));
                           console.log(item);
@@ -155,7 +145,7 @@ const VehicleMake = ({ navigation }) => {
                       >
                         <Text style={styles.nameText}>{item}</Text>
                       </TouchableOpacity>
-                    </View>
+                    </MotiView>
                   );
                 }}
               />
@@ -175,7 +165,7 @@ const styles = StyleSheet.create({
     width: Dimensions.get("window").width / 2 - 40,
     backgroundColor: "white",
     display: "flex",
-
+    height: 80,
     margin: 10,
     borderRadius: 20,
     shadowColor: "#171717",
@@ -189,10 +179,10 @@ const styles = StyleSheet.create({
     height: 55,
     alignItems: "center",
     justifyContent: "center",
-    flexDirection: "row",
+    // flexDirection: "row",
   },
   imageContainer: {
-    margin: 15,
+    // margin: 10,
     // borderRadius: 10,
     // overflow: "hidden",
     display: "flex",
@@ -207,9 +197,16 @@ const styles = StyleSheet.create({
   nameText: {
     color: "black",
     fontWeight: "bold",
-    // marginLeft: 15,
-    height: 50,
+
+    fontSize: 14,
+
     textAlign: "center",
+    color: "#000000",
+    alignSelf: "center",
+    justifyContent: "center",
+    alignItems: "center",
+    textAlignVertical: "center",
+    alignContent: "center",
   },
 });
 
