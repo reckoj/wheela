@@ -83,9 +83,6 @@ const TripResult = () => {
             <Nav2 width={200} height={110} style={{ alignSelf: "center" }} />
             <View>
               <Text style={styles.headerTextMain}>
-                {
-                  //todo add selected vehicle
-                }
                 {selectedMake} {selectedModel} {selectedYear}
               </Text>
             </View>
@@ -126,7 +123,6 @@ const TripResult = () => {
               <TouchableOpacity
                 onPress={() => {
                   dispatch(clearAll());
-                  console.log("hello");
                 }}
                 style={{
                   position: "relative",
@@ -182,13 +178,11 @@ const TripResult = () => {
 };
 
 export default TripResult;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-
-    // padding: 20,
-    // width: 250,
   },
   headerText: {
     fontSize: 18,

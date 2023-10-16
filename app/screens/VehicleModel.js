@@ -28,6 +28,7 @@ const VehicleModel = ({ navigation }) => {
   const dispatch = useDispatch();
   const [isLoading, setLoading] = useState(false);
   const [models, setCarModels] = useState([]);
+
   const make = useSelector(selectVehcicleInformationMake);
 
   const selectedMake = make?.make;
@@ -69,7 +70,6 @@ const VehicleModel = ({ navigation }) => {
     fetchData();
   }, []);
 
-  // Render each item in the FlatList
   const uniqueModels = Array.from(new Set(models.map((item) => item.name)));
   const sortedModels = uniqueModels.sort();
 
@@ -78,7 +78,7 @@ const VehicleModel = ({ navigation }) => {
       <View
         style={{
           width: "100%",
-
+          backgroundColor: "white",
           flexDirection: "row",
           paddingHorizontal: 10,
           paddingBottom: 10,
@@ -139,10 +139,7 @@ const VehicleModel = ({ navigation }) => {
               <FlatList
                 stickyHeaderIndices={[0]}
                 ListHeaderComponent={listHeader}
-                onScrollEndDrag={() => console.log("end")}
-                onScrollBeginDrag={() => console.log("start")}
                 data={sortedModels}
-                // keyExtractor={(item) => item.id}
                 numColumns={2}
                 showsVerticalScrollIndicator={false}
                 renderItem={({ item, index }) => {
@@ -157,7 +154,7 @@ const VehicleModel = ({ navigation }) => {
                         style={{ justifyContent: "center", height: "100%" }}
                         onPress={() => {
                           dispatch(setVehicleInformationModel({ model: item }));
-                          console.log(item);
+
                           navigation.navigate("VehicleYear");
                         }}
                       >
@@ -197,12 +194,8 @@ const styles = StyleSheet.create({
     height: 55,
     alignItems: "center",
     justifyContent: "center",
-    // flexDirection: "row",
   },
   imageContainer: {
-    // margin: 10,
-    // borderRadius: 10,
-    // overflow: "hidden",
     display: "flex",
     alignItems: "center",
   },

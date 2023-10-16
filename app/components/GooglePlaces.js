@@ -45,7 +45,7 @@ const placesStyles = StyleSheet.create({
     width: "90%",
     marginBottom: 20,
     borderRadius: 15,
-    // height: 65,
+
     display: "flex",
     justifyContent: "center",
   },

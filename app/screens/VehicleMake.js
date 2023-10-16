@@ -62,7 +62,6 @@ const VehicleMake = ({ navigation }) => {
     fetchData();
   }, []);
 
-  // Render each item in the FlatList
   const uniqueMakes = Array.from(new Set(makes.map((item) => item.name)));
   const sortedMakes = uniqueMakes.sort();
 
@@ -71,7 +70,7 @@ const VehicleMake = ({ navigation }) => {
       <View
         style={{
           width: "100%",
-          // backgroundColor: "red",
+          backgroundColor: "white",
           flexDirection: "row",
           paddingHorizontal: 10,
           paddingBottom: 10,
@@ -82,7 +81,6 @@ const VehicleMake = ({ navigation }) => {
         <BackButton onPress={() => navigation.navigate("MainScreen")} />
         <RegularText
           style={{
-            // position: "absolute",
             alignSelf: "center",
             letterSpacing: 1,
 
@@ -123,7 +121,6 @@ const VehicleMake = ({ navigation }) => {
                 stickyHeaderIndices={[0]}
                 ListHeaderComponent={listHeader}
                 data={sortedMakes}
-                // keyExtractor={(item) => item.id}
                 numColumns={2}
                 showsVerticalScrollIndicator={false}
                 renderItem={({ item, index }) => {
@@ -135,11 +132,10 @@ const VehicleMake = ({ navigation }) => {
                       delay={index * 50}
                     >
                       <TouchableOpacity
-                        // style={[styles.imageContainer]}
                         style={{ justifyContent: "center", height: "100%" }}
                         onPress={() => {
                           dispatch(setVehicleInformationMake({ make: item }));
-                          console.log(item);
+
                           navigation.navigate("VehicleModel");
                         }}
                       >
@@ -179,12 +175,8 @@ const styles = StyleSheet.create({
     height: 55,
     alignItems: "center",
     justifyContent: "center",
-    // flexDirection: "row",
   },
   imageContainer: {
-    // margin: 10,
-    // borderRadius: 10,
-    // overflow: "hidden",
     display: "flex",
     alignItems: "center",
   },

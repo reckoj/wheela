@@ -213,23 +213,41 @@ const MainScreen = ({ navigation }) => {
           right: "2%",
         }}
       >
-        <MainButton
-          onPress={() => {
-            setModalVisible(true);
-          }}
-        >
-          <RegularText
-            style={{
-              color: white,
-              fontSize: 16,
-              fontFamily: "Amaranth-reg",
+        {selectedMake && selectedModel && selectedYear ? (
+          <MainButton
+            onPress={() => {
+              // setModalVisible(true);
+              navigation.navigate("NavigationScreen");
             }}
           >
-            {selectedMake && selectedModel && selectedYear
-              ? "Start trip"
-              : "View trip"}
-          </RegularText>
-        </MainButton>
+            <RegularText
+              style={{
+                color: white,
+                fontSize: 16,
+                fontFamily: "Amaranth-reg",
+              }}
+            >
+              Start trip
+            </RegularText>
+          </MainButton>
+        ) : (
+          <MainButton
+            onPress={() => {
+              setModalVisible(true);
+              // navigation.navigate("NavigationScreen");
+            }}
+          >
+            <RegularText
+              style={{
+                color: white,
+                fontSize: 16,
+                fontFamily: "Amaranth-reg",
+              }}
+            >
+              View trip
+            </RegularText>
+          </MainButton>
+        )}
       </View>
 
       {travelDuration && selectedYear ? (
@@ -243,7 +261,6 @@ const MainScreen = ({ navigation }) => {
           }}
         >
           <Card
-            // mode="outlined"
             style={{
               position: "absolute",
               display: "flex",
@@ -320,7 +337,6 @@ const MainScreen = ({ navigation }) => {
           }}
         >
           <Card
-            // mode="outlined"
             style={{
               position: "absolute",
               display: "flex",
@@ -420,7 +436,7 @@ const placesStyles = StyleSheet.create({
     width: "90%",
 
     borderRadius: 15,
-    // height: 65,
+
     display: "flex",
     justifyContent: "center",
   },
@@ -429,8 +445,6 @@ const placesStyles = StyleSheet.create({
   },
   textInputContainer: {
     paddingLeft: 35,
-    // paddingVertical: 20,
-    // display: "flex",
   },
 });
 

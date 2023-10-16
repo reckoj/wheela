@@ -48,28 +48,19 @@ const VehicleYear = ({ navigation }) => {
     const fetchData = () => {
       try {
         setLoading(true);
-        axios
-          .request(options)
-          .then((response) => {
-            let res = response.data;
-            setLoading(false);
-            console.log(res);
-
-            setCarYears(res);
-          })
-          .catch(function (error) {
-            console.error(error);
-            setLoading(false);
-          });
+        axios.request(options).then((response) => {
+          let res = response.data;
+          setLoading(false);
+          setCarYears(res);
+        });
       } catch (error) {
+        setLoading(false);
         console.log(error);
       }
     };
 
     fetchData();
   }, []);
-
-  //todo change the data in the flatlist
 
   const uniqueYear = years.map((item) => item);
 
@@ -78,11 +69,8 @@ const VehicleYear = ({ navigation }) => {
       <View
         style={{
           width: "100%",
-
+          backgroundColor: "white",
           flexDirection: "row",
-          // paddingHorizontal: 10,
-          // paddingBottom: 10,
-          // paddingTop: 5,
           padding: 10,
           justifyContent: "space-between",
         }}
@@ -143,7 +131,6 @@ const VehicleYear = ({ navigation }) => {
                 stickyHeaderIndices={[0]}
                 ListHeaderComponent={listHeader}
                 data={uniqueYear}
-                // keyExtractor={(item) => item.id}
                 numColumns={2}
                 showsVerticalScrollIndicator={false}
                 renderItem={({ item, index }) => {
@@ -159,7 +146,6 @@ const VehicleYear = ({ navigation }) => {
                         onPress={() => {
                           dispatch(setVehicleInformationYear({ year: item }));
 
-                          // Navigate to the "NextScreen"
                           navigation.navigate("MainScreen");
                         }}
                       >
@@ -199,12 +185,8 @@ const styles = StyleSheet.create({
     height: 55,
     alignItems: "center",
     justifyContent: "center",
-    // flexDirection: "row",
   },
   imageContainer: {
-    // margin: 10,
-    // borderRadius: 10,
-    // overflow: "hidden",
     display: "flex",
     alignItems: "center",
   },

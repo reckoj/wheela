@@ -27,14 +27,7 @@ const MainButton = (props) => {
 
   return (
     <TouchableOpacity
-      disabled={
-        !travelDistance && !travelDuration ? true : false
-        // selectedMake == null &&
-        // selectedModel == null &&
-        // selectedYear == null
-        //   ? true
-        //   : false
-      }
+      disabled={!travelDistance && !travelDuration ? true : false}
       style={[
         styles.container,
         {
@@ -42,11 +35,6 @@ const MainButton = (props) => {
             !travelDistance && !travelDuration && selectedMake == undefined
               ? lightGrey
               : primary,
-          // selectedMake == null &&
-          // selectedModel == null &&
-          // selectedYear == null
-          //   ? lightGrey
-          //   : primary,
         },
         styles.shadowProp,
       ]}

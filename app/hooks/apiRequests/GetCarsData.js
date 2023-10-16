@@ -1,6 +1,5 @@
 import axios from "axios";
 
-// Define your API base URL
 const API_BASE_URL = `https://car-api2.p.rapidapi.com`;
 
 const api = axios.create({
@@ -10,7 +9,6 @@ const api = axios.create({
   },
 });
 
-// Function to fetch vehicle makes
 export const fetchMakes = async () => {
   const value = "/api/makes";
   try {
@@ -25,7 +23,6 @@ export const fetchMakes = async () => {
   }
 };
 
-// Function to fetch vehicle models for a given make
 export const fetchModels = async (makeId) => {
   const value = `/api/models?makeId=${makeId}`;
   try {
@@ -37,7 +34,6 @@ export const fetchModels = async (makeId) => {
   }
 };
 
-// Function to fetch vehicle years for a given make and model
 export const fetchYears = async (makeId, modelId) => {
   const value = `/api/years?makeId=${makeId}&modelId=${modelId}`;
   try {

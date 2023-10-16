@@ -4,18 +4,13 @@ import VehicleModel from "../../screens/VehicleModel";
 import VehicleYear from "../../screens/VehicleYear";
 import MainScreen from "../../screens/MainScreen";
 import TripResult from "../../screens/TripResult";
+import MapBoxScreen from "../../screens/MapBoxNav";
 
 const Stack = createStackNavigator();
 
 function Main() {
   return (
-    <Stack.Navigator
-    // screenOptions={{
-    //   headerMode: "screen",
-    //   headerTintColor: "white",
-    //   headerStyle: { backgroundColor: "transparent" },
-    // }}
-    >
+    <Stack.Navigator>
       <Stack.Screen
         name="MainScreen"
         component={MainScreen}
@@ -31,13 +26,6 @@ function Main() {
         }}
       />
 
-      {/* <Stack.Screen
-        name="Vehicledata"
-        component={Vehicledata}
-        options={{
-          headerShown: false,
-        }}
-      /> */}
       <Stack.Screen
         name="TripResult"
         component={TripResult}
@@ -60,6 +48,11 @@ function Main() {
         }}
       />
       {/* <Stack.Screen name="Map" component={Map} /> */}
+      <Stack.Screen
+        name="NavigationScreen"
+        component={MapBoxScreen}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 }

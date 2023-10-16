@@ -36,7 +36,6 @@ const Map = () => {
       latitudeDelta: 0.005,
       longitudeDelta: 0.005,
     });
-    // console.log(location.coords.latitude, location.coords.longitude);
   };
 
   useEffect(() => {
@@ -51,9 +50,7 @@ const Map = () => {
 
   useEffect(() => {
     if (!origin || !destination) return;
-    // mapRef.current.fitToCoordinates(["origin", "destination"], {
-    //   edgePadding: { top: insets.top + scale(15), bottom: scale(15), left: scale(15), right: scale(15)},
-    // })
+
     mapRef.current.fitToSuppliedMarkers(["origin", "destination"], {
       edgePadding: {
         top: insets.top + scale(50),
@@ -76,7 +73,6 @@ const Map = () => {
           dispatch(setTravelTimeInformation(data.rows[0].elements[0]));
         })
         .catch((e) => {
-          // console.log(e.message);
           throw console.error(e);
         });
     };
