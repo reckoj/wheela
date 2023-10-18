@@ -1,7 +1,6 @@
+import { View, Text, StyleSheet } from "react-native";
+import React from "react";
 import MapboxNavigation from "@homee/react-native-mapbox-navigation";
-import * as React from "react";
-import { StyleSheet, View } from "react-native";
-// import MapboxNavigation from "@homee/react-native-mapbox-navigation";
 
 const MapBoxScreen = () => {
   return (

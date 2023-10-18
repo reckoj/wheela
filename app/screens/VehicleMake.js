@@ -127,9 +127,18 @@ const VehicleMake = ({ navigation }) => {
                   return (
                     <MotiView
                       style={[styles.listContainer]}
-                      from={{ opacity: 0, translateY: -50 }}
-                      animate={{ opacity: 1, translateY: 0 }}
-                      delay={index * 50}
+                      // from={{ opacity: 0, translateY: -50 }}
+                      // animate={{ opacity: 1, translateY: 0 }}
+
+                      from={{
+                        scale: 0,
+                        translateX: -10,
+                      }}
+                      animate={{
+                        scale: 1,
+                        translateX: 0,
+                      }}
+                      // delay={index * 20}
                     >
                       <TouchableOpacity
                         style={{ justifyContent: "center", height: "100%" }}

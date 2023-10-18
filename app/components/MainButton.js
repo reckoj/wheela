@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   shadowProp: {
-    shadowColor: "#171717",
+    shadowColor: "black",
     shadowOffset: { width: -2, height: 4 },
     shadowOpacity: 0.4,
     shadowRadius: 3,

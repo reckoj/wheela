@@ -213,7 +213,11 @@ const MainScreen = ({ navigation }) => {
           right: "2%",
         }}
       >
-        {selectedMake && selectedModel && selectedYear ? (
+        {selectedMake &&
+        selectedModel &&
+        selectedYear &&
+        startLocation &&
+        dest ? (
           <MainButton
             onPress={() => {
               // setModalVisible(true);
@@ -232,6 +236,22 @@ const MainScreen = ({ navigation }) => {
           </MainButton>
         ) : (
           <MainButton
+            style={{
+              width: 100,
+              padding: 15,
+              justifyContent: "center",
+              borderRadius: 15,
+              height: 60,
+              alignItems: "center",
+
+              shadowColor: "black",
+              shadowOffset: { width: -2, height: 4 },
+              shadowOpacity: 0.4,
+              shadowRadius: 3,
+
+              backgroundColor:
+                startLocation != null && dest != null ? primary : lightGrey,
+            }}
             onPress={() => {
               setModalVisible(true);
               // navigation.navigate("NavigationScreen");
@@ -308,7 +328,6 @@ const MainScreen = ({ navigation }) => {
                 }}
                 style={{
                   padding: 15,
-
                   backgroundColor: primary,
                   borderRadius: 15,
                 }}
@@ -416,7 +435,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   shadowProp: {
-    shadowColor: "#171717",
+    shadowColor: "black",
     shadowOffset: { width: -2, height: 4 },
     shadowOpacity: 0.4,
     shadowRadius: 3,
@@ -502,7 +521,7 @@ const PressableIconStyles = StyleSheet.create({
     fontSize: 12,
   },
   shadowProp: {
-    shadowColor: "#171717",
+    shadowColor: "black",
     shadowOffset: { width: -2, height: 4 },
     shadowOpacity: 0.4,
     shadowRadius: 3,

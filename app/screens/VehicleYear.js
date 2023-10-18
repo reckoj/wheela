@@ -137,9 +137,17 @@ const VehicleYear = ({ navigation }) => {
                   return (
                     <MotiView
                       style={[styles.listContainer]}
-                      from={{ opacity: 0, translateY: -50 }}
-                      animate={{ opacity: 1, translateY: 0 }}
-                      delay={index * 50}
+                      // from={{ opacity: 0, translateY: -50 }}
+                      // animate={{ opacity: 1, translateY: 0 }}
+
+                      from={{
+                        scale: 0,
+                        translateX: -10,
+                      }}
+                      animate={{
+                        scale: 1,
+                        translateX: 0,
+                      }}
                     >
                       <TouchableOpacity
                         style={{ justifyContent: "center", height: "100%" }}
@@ -174,7 +182,7 @@ const styles = StyleSheet.create({
     height: 80,
     margin: 10,
     borderRadius: 20,
-    shadowColor: "#171717",
+    shadowColor: "black",
     shadowOffset: { width: -1, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
